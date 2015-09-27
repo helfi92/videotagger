@@ -1,0 +1,62 @@
+
+
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="loginModalLabel">Login</h4>
+      </div>
+      <div class="modal-body">
+       	<input placeholder="E-mail" ng-model="emailLogin">
+      	<input placeholder="Password" ng-model="passwordLogin" type="password">
+      </div>
+      <div class="modal-footer">
+        <button ng-click="login(emailLogin,passwordLogin)" type="button" class="btn btn-primary" data-dismiss="modal">Login</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SignUp Modal -->
+<div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="signupModalLabel">Signup</h4>
+      </div>
+      <div class="modal-body">
+       	<input placeholder="Full Name" ng-model="firstname">
+      	<input placeholder="E-mail" ng-model="emailSignup">
+      	<input placeholder="Password" ng-model="passwordSignup" type="password">
+      </div>
+      <div class="modal-footer">
+        <button ng-click="createNewAccount(emailSignup,passwordSignup)" type="button" class="btn btn-primary" data-dismiss="modal">Signup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<div style="height:80px;background-color:white;position:fixed;width:100%;padding:30px 0;z-index:10;">
+	<div ng-show="$parent.user">
+		<div class="col-xs-4"></div>
+		<div class="col-xs-4 text-center">Virtual Tagger</div>
+		<div class="col-xs-4"><button ng-click="logout()" class="btn btn-primary pull-right">Logout</button></div>
+
+	</div>
+	<div ng-hide="$parent.user" style="text-align: center;">
+		<div class="col-xs-4"></div>
+		<div class="col-xs-4 text-center">Virtual Tagger</div>
+		<div class="col-xs-4">
+			<div class="pull-right"><button data-toggle="modal" data-target="#loginModal" class="btn btn-primary">Login now!</button>
+			<button data-toggle="modal" data-target="#signupModal" class="btn btn-primary">Signup now!</button></div>
+		</div>
+	</div>
+	
+</div>
