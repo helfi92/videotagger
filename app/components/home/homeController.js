@@ -58,10 +58,25 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		$scope.chapters.$add({
 			name : chapter
 		});
+	};
+
+	$scope.init = function(){
+		videojs('vid1', {
+
+	        plugins: {
+	          ass: {
+	            'src': ["assets/css/testcaption.ass"]
+	          }
+	        }
+	      });
 	}
+	$scope.init();
+
+	
 	
 
 }]);
+
 
 /*
 *

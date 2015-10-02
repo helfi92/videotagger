@@ -9,20 +9,22 @@
 
     <!-- VIDEO -->
     <div style="padding-top:25px;padding-bottom: 25px;">
-    	<video id="vid1" src="" class="video-js vjs-default-skin" controls preload="auto" width="auto" height="360" data-setup='{ "techOrder": ["youtube"]}'>
+    	<video id="vid1"  class="video-js vjs-default-skin" controls preload="auto" width="auto" height="360" data-setup='{ "techOrder": ["youtube"]}'>
 
         <source src="//www.youtube.com/watch?v=oAtjf6Ijmtw" type='video/youtube'  />
-        <track kind="captions" src="assets/css/testcaption.vtt" srclang="en" label="English" default>
+        <!--<track kind="subtitles" src="assets/css/testcaption.vtt" srclang="en" label="English" default>-->
 
-  		</video>	
+  		</video>
+
     </div>
-       <video id="example_video_1" class="video-js vjs-default-skin" controls preload="auto" width="640" height="264"  data-setup='{"example_option":true}'>  
+       <video id="vid2" class="video-js vjs-default-skin" controls preload="auto" width="640" height="264"  data-setup='{"example_option":true}'>  
        <source src="http://video-js.zencoder.com/oceans-clip.mp4" type='video/mp4' />  
        
 
-       <track kind="captions" src="assets/css/testcaption.vtt" srclang="en" label="English" default>
+       <!--<track kind="subtitles" src="assets/css/testcaption.vtt" srclang="en" label="English" default></track>-->
 
       </video>
+
     
     <div class="pull-right">
     	<button class="btn btn-primary" ng-click="writeLinkToDatabase(urlLink)">Write to database</button>
