@@ -3,52 +3,43 @@
 <head>
 <title>Video-Tagger</title>
 
-
-  
-  
-
 <!--css -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="assets/libs/font-awesome-4.4.0/css/font-awesome.min.css">
-<link href="//vjs.zencdn.net/4.12/video-js.css" rel="stylesheet">
-<link type="text/css" rel="stylesheet" href="node_modules/video.js/dist/video-js/video-js.css" />
+<link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="bower_components/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="node_modules/video.js/dist/video-js/video-js.css">
 <link href="node_modules/videojs-ass/node_modules/libjass/libjass.css" rel="stylesheet">
 <link href="node_modules/videojs-ass/src/videojs.ass.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="bower_components/videojs-marker/dist/videojs.markers.css">
 
 <link rel="stylesheet" type="text/css" href="assets/css/common.css">
 <link rel="stylesheet" type="text/css" href="assets/css/test.css">
 
-
-
-
-
 <!--js-->
-<!--<script src="assets/libs/angular.min.js"></script>-->
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js"></script>
-<script src="assets/libs/angular-route.min.js"></script>
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/angular-route/angular-route.min.js"></script>
 <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
 <script src="https://cdn.firebase.com/libs/angularfire/1.1.2/angularfire.min.js"></script>
 
-<script src="assets/libs/jquery-1.11.3.min.js"></script>
+
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="node_modules/video.js/dist/video-js/video.js"></script>
 <script src="node_modules/videojs-youtube/src/youtube.js"></script>
 <script src="node_modules/videojs-ass/node_modules/libjass/libjass.js"></script>
 <script src="node_modules/videojs-ass/src/videojs.ass.js"></script>
-<script>
-    videojs.options.flash.swf = "video-js.swf";
-</script>
+<script src="bower_components/videojs-marker/dist/videojs-markers.js"></script>
+
 
 </head>
 
 <body ng-app="mainModule">
-	
-	<!-- Actual website -->
-	<div class="background-container" style=""><div class="background" style=""></div></div>
-	
-	<div ng-controller="navController"
-		ng-include="'app/shared/nav/navView.html'"></div>
-	<div ng-view></div>
+    
+    <!-- Actual website -->
+    <div class="background-container" style=""><div class="background" style=""></div></div>
+    
+    <div ng-controller="navController"
+        ng-include="'app/shared/nav/navView.html'"></div>
+    <div ng-view></div>
 
 </body>
 

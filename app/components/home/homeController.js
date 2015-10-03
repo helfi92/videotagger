@@ -67,13 +67,23 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	          ass: {
 	            'src': ["assets/css/testcaption.ass"]
 	          }
-	        }
+	        },
+
 	      });
+
+		var player = videojs('vid1');
+		player.markers({
+		   markers: [
+		      {time: 9.5, text: "this"},
+		      {time: 16,  text: "is"},
+		      {time: 23.6,text: "so"},
+		      {time: 28,  text: "cool"}
+		   ]
+		});
+
+
 	}
 	$scope.init();
-
-	
-	
 
 }]);
 
