@@ -9,9 +9,9 @@
 
     <!-- VIDEO -->
     <div style="padding-top:25px;padding-bottom: 25px;">
-    	<video id="vid1"  class="video-js vjs-default-skin" controls preload="auto" width="auto" height="360" data-setup='{ "techOrder": ["youtube"]}'>
+    	<video ng-model="link" id="vid1"  class="video-js vjs-default-skin" controls preload="auto" width="auto" height="360" data-setup='{ "techOrder": ["youtube"]}'>
 
-        <source src="//www.youtube.com/watch?v=oAtjf6Ijmtw" type='video/youtube'  />
+        <source   src="//www.youtube.com/watch?v=oAtjf6Ijmtw" type='video/youtube'  />
 
   		</video>
 
@@ -19,10 +19,10 @@
       
 
     
-    <div class="pull-right">
+   <!--  <div class="pull-right">
     	<button class="btn btn-primary" ng-click="writeLinkToDatabase(urlLink)">Write to database</button>
     </div>
-
+    -->
     <div style="text-align: center;"ng-repeat="item in messages">
     	{{item.url}}
     </div>
@@ -51,7 +51,7 @@
           <input ng-model="endtime">
         </div>
       </div>
-      <div style="margin-top:25px;"><button ng-click="addTag(selectedChapter,tagname,starttime,endtime)" class="pull-right btn btn-primary">Add it</button></div>
+      <div style="margin-top:25px;"><button ng-click="addTag(selectedChapter,tagname,starttime,endtime,urlLink,'Hey, this is my annotation')" class="pull-right btn btn-primary">Add it</button></div>
     </div>
     
    
