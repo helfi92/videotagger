@@ -1,8 +1,6 @@
 app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','$timeout', function($scope,$rootScope,Auth,$firebaseArray,$timeout){
 
 
-  	console.log('link is: ', $scope.urlLink);
-
   	var ref = new Firebase("https://flickering-heat-6138.firebaseio.com");
   	var refTag = ref.child('tag');
 	var refChapters = ref.child('chapters');
@@ -14,9 +12,50 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	$scope.chapters = $firebaseArray(refChapters);
 	$scope.chaptersInObject = [];
 	
-	refChapters.on('child_added',function(snapshot){
-		$scope.chaptersInObject.push(snapshot.val());
-	})
+	
+	var refChapterIndex = 0;
+	refChapters.on('value',function(snapshot){
+		snapshot.forEach(function(childSnapshot) {
+		    $scope.chaptersInObject.push(childSnapshot.val());
+			$scope.chaptersInObject[refChapterIndex].cl = "" + refChapterIndex;
+			refChapterIndex++;
+		});
+		setMarkersForVideo();
+		refChapterIndex = 0;
+	});
+
+	function setMarkersForVideo(){
+		// This is for the when you first open the window, the default video shown
+		refTag.on('child_added',function(childSnapShot){
+			
+			//if the snap has the same url, add the marker
+			var player = videojs('vid1');
+			var object = childSnapShot.val();
+			for(var i = 0 ; i < $scope.chaptersInObject.length ; i++){
+				if(object.chapter == $scope.chaptersInObject[i].name){
+					var classColor = "color" + $scope.chaptersInObject[i].cl;
+					break;
+				}
+			}
+			if(object.link == $scope.urlLink){
+
+				var time = object.starttime;
+				var goTotime = stringToMilliseconds(time);
+				var tagName = object.tag;
+
+				
+				player.markers.add([{ 
+					time: goTotime, 
+					text: tagName,
+					class: "" + classColor
+				}]);
+				//change color css through index
+
+
+			}else{
+			}
+		});
+	}	
 
 	$scope.goButtonClicked = function(url){
 		var player = videojs('vid1');
@@ -28,13 +67,9 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		refTag = "";
 		refTag = ref.child('tag');
 
-		
-
 		refTag.on('child_added',function(childSnapShot){
 		
 		//if the snap has the same url, add the marker
-		
-		
 		var object = childSnapShot.val();
 		if(object.link == $scope.urlLink){
 			var time = object.starttime;
@@ -45,7 +80,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		}else{
 		}
 		
-
 
 		});
 
@@ -94,33 +128,16 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	}
 
 	$scope.addChapter = function(chapter){
+		
 		$scope.chapters.$add({
 			name : chapter
 		});
+
 	};
 
-	// This is for the when you first open the window, the default video shown
-	refTag.on('child_added',function(childSnapShot){
-		
-		//if the snap has the same url, add the marker
-		
-		var player = videojs('vid1');
-		var object = childSnapShot.val();
-		if(object.link == $scope.urlLink){
-			var time = object.starttime;
-			var goTotime = stringToMilliseconds(time);
-
-			var tagName = object.tag;
-
-			player.markers.add([{ time: goTotime, text: tagName}]);
+	
 
 
-		}else{
-		}
-		
-
-
-	});
 
 	
 	
@@ -144,7 +161,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		   	markerStyle: {
 		      	'width':'7px',
 		      	'border-radius': '30%',
-		      	'background-color': 'blue'
+		      	//'background-color': 'blue'
 	   		},
 	   		markerTip:{
 		    	display: true,
@@ -159,8 +176,11 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		});
 		//player.markers.removeAll();
 
+
 	}
 	$scope.init();
+
+	
 
 }]);
 
