@@ -44,18 +44,18 @@
 
 
 <div style="height:80px;background-color:white;position:fixed;width:100%;padding:30px 0;z-index:10;">
-	<div ng-show="$parent.user">
-		<div class="col-xs-4"></div>
-		<div class="col-xs-4 text-center">Virtual Tagger</div>
-		<div class="col-xs-4"><button ng-click="logout()" class="btn btn-primary pull-right">Logout</button></div>
+	<div style="height:100%;"ng-show="$parent.user">
+		<div class="col-xs-4" style="height:100%;"><img style="margin-top:-20px;height:60px;" src="/videotagger/assets/img/bird-mcgill.png"></div>
+		<div class="col-xs-4 text-center" style="height:100%;"><h4>Virtual Tagger<h4></div>
+		<div class="col-xs-4" style="height:100%;"><button ng-click="logout()" class="btn btn-primary pull-right">Logout</button></div>
 
 	</div>
-	<div ng-hide="$parent.user" style="text-align: center;">
-		<div class="col-xs-4"></div>
-		<div class="col-xs-4 text-center">Virtual Tagger</div>
-		<div class="col-xs-4">
-			<div class="pull-right"><button data-toggle="modal" data-target="#loginModal" class="btn btn-primary">Login now!</button>
-			<button data-toggle="modal" data-target="#signupModal" class="btn btn-primary">Signup now!</button></div>
+	<div style="height:100%;" ng-hide="$parent.user" style="text-align: center;">
+		<div style="height:100%;" class="col-xs-4"><img style="margin-top:-20px;height:60px;" src="/videotagger/assets/img/bird-mcgill.png"></div>
+		<div style="height:100%;" class="col-xs-4 text-center"><h4>Virtual Tagger</h4></div>
+		<div style="height:100%;" class="col-xs-4">
+			<div class="pull-right"><button data-toggle="modal" data-target="#loginModal" class="btn btn-primary">Login now</button>
+			<button data-toggle="modal" data-target="#signupModal" class="btn btn-primary">Signup now</button></div>
 		</div>
 	</div>
 	
