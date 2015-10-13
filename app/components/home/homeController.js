@@ -13,16 +13,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	$scope.chaptersInObject = [];
 	
 	
-	var refChapterIndex = 0;
-	refChapters.on('value',function(snapshot){
-		snapshot.forEach(function(childSnapshot) {
-		    $scope.chaptersInObject.push(childSnapshot.val());
-			$scope.chaptersInObject[refChapterIndex].cl = "" + refChapterIndex;
-			refChapterIndex++;
-		});
-		setMarkersForVideo();
-		refChapterIndex = 0;
-	});
+	
 
 	function setMarkersForVideo(){
 		// This is for the when you first open the window, the default video shown
@@ -58,29 +49,31 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	}	
 
 	$scope.goButtonClicked = function(url){
-		var player = videojs('vid1');
-		player.src(url);
-		player.bigPlayButton.show();
-		
-		player.markers.removeAll();
+		videojs("vid1").ready(function(){
+			var player = videojs('vid1');
+			player.src(url);
+			player.bigPlayButton.show();
+			
+			player.markers.removeAll();
 
-		refTag = "";
-		refTag = ref.child('tag');
+			refTag = "";
+			refTag = ref.child('tag');
 
-		refTag.on('child_added',function(childSnapShot){
-		
-		//if the snap has the same url, add the marker
-		var object = childSnapShot.val();
-		if(object.link == $scope.urlLink){
-			var time = object.starttime;
-			var goTotime = stringToMilliseconds(time);
+			refTag.on('child_added',function(childSnapShot){
+			
+				//if the snap has the same url, add the marker
+				var object = childSnapShot.val();
+				if(object.link == $scope.urlLink){
+					var time = object.starttime;
+					var goTotime = stringToMilliseconds(time);
 
-			var tagName = object.tag;
-			player.markers.add([{ time: goTotime, text: tagName}]);
-		}else{
-		}
-		
+					var tagName = object.tag;
+					player.markers.add([{ time: goTotime, text: tagName}]);
+				}else{
+				}
+			
 
+			});
 		});
 
 	};
@@ -107,8 +100,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			// }else{
 			// 	console.log('Not logged in, cant write to database');
 			// }
-
-			
 	}
 
 	function stringToMilliseconds (time){
@@ -135,16 +126,9 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 	};
 
-	
 
-
-
-	
-	
-
-	
-
-	$scope.init = function(){
+	var init = function(){
+		
 		videojs('vid1', {
 
 	        plugins: {
@@ -155,8 +139,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 	    });
 
+			var player = videojs('vid1');
 		
-		var player = videojs('vid1');
 		player.markers({
 		   	markerStyle: {
 		      	'width':'7px',
@@ -177,8 +161,34 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		//player.markers.removeAll();
 
 
+
 	}
-	$scope.init();
+	var setupSlider = function(){
+		// videojs("vid1").ready(function(){
+	 //    	var options ={hidden:false},
+		// 		mplayer=videojs("vid1");
+		// 		mplayer.rangeslider(options);
+		// });	
+	}
+	init();
+	setupSlider();
+
+	var refChapterIndex = 0;
+	videojs("vid1").ready(function(){
+		refChapters.on('value',function(snapshot){
+			snapshot.forEach(function(childSnapshot) {
+			    $scope.chaptersInObject.push(childSnapshot.val());
+				$scope.chaptersInObject[refChapterIndex].cl = "" + refChapterIndex;
+				refChapterIndex++;
+			});
+			setMarkersForVideo();
+			refChapterIndex = 0;
+		});
+
+
+	});
+
+	
 
 	
 
