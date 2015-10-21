@@ -13,8 +13,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	$scope.chaptersInObject = [];
 	
 	
-	
-
 	function setMarkersForVideo(){
 		// This is for the when you first open the window, the default video shown
 		refTag.on('child_added',function(childSnapShot){
@@ -78,15 +76,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 	};
 	
-	$scope.writeLinkToDatabase = function(url){
-			//if($rootScope.user){
-				$scope.messages.$add({
-				url : url,
-				});
-			//}else{
-				console.log('Not logged in, cant write to database');
-			//}		
-	};
+		
+	
 	$scope.addTag = function(chapter,tag,starttime,endtime,link,annotation){
 			//if($rootScope.user){
 				$scope.tag.$add({
@@ -101,6 +92,12 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			// 	console.log('Not logged in, cant write to database');
 			// }
 	}
+	$scope.removeTag = function(item){
+		console.log('$scope.tag before: ', $scope.tag);
+		$scope.tag.$remove(item);
+		console.log('$scope.tag after: ', $scope.tag);
+	}
+
 
 	function stringToMilliseconds (time){
 		var strTimeArray = time.split(":");
@@ -112,7 +109,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		return goTotime;
 	}
 	
-	$scope.setCurrentTime = function(time){
+	$scope.fastForwardTo = function(time){
 		var goTotime = stringToMilliseconds(time);
 		
 		document.getElementById('vid1').player.currentTime(goTotime);
@@ -189,9 +186,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	});
 
 	
-
-	
-
 }]);
 
 

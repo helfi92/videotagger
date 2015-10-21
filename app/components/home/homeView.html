@@ -5,19 +5,28 @@
             <!-- add tag -->
             <button data-toggle="modal" data-target="#addTagModal"  class="left-panel-button">
               <div style="display:inline-block;">
-                <img style="height:50px;"src="http://simpleicon.com/wp-content/uploads/add-tag.png">
+                <img style="height:50px;"src="http://www.bespokeindustries.com/images/ribbon-tag.png">
               </div>
               <div style="display:inline-block;"><h5 style="color:white;">Add a Tag</h5></div>
             </button>
 
             <!-- filter by -->
-            <div style="margin-top:20px;">
+            <div style="margin-top:20px;margin-bottom:20px;">
               <div style="display:inline-block;"><img style="height:50px;"src="http://icons.iconarchive.com/icons/icons8/ios7/256/Very-Basic-Filter-icon.png"></div><div style="display:inline-block;"><h5 style="color:white;">Filter by:</h5></div> 
               <select class="form-control" ng-model="filterChapter">
                 <option ng-repeat="item in chapters track by $index" value="{{item.name}}">{{item.name}}</option>
               </select>
 
             </div>
+
+            <div>
+              <button data-toggle="modal" data-target="#addTagModal"  class="left-panel-button">
+                <div style="display:inline-block;">
+                  <img style="height:50px;"src="http://img4.wikia.nocookie.net/__cb20130407014637/marioluigiplushbros/images/d/d2/Edit.png">
+                </div>
+                <div style="display:inline-block;"><h5 style="color:white;">Edit Tags</h5></div>
+              </button>
+            </div> 
 
           </div> 
 
@@ -54,16 +63,15 @@
       
      
       <table style="width:100%;text-align: center;border: 1px solid black;margin-top:20px;">
-        <tr><td>Tag Name</td><td>Start Time</td><td>End Time</td></tr>
-        <tr ng-repeat="item in tag | filter : {chapter : filterChapter}"><td ng-click="setCurrentTime(item.starttime)">{{item.chapter + " " + item.tag}}</td><td>{{item.starttime}}</td><td>{{item.endtime}}</td></tr>
+        <tr><td>Tag Name</td><td>Start Time</td><td>End Time</td><td><!--column reserved for removing--></td><td><!--column reserved for edit--></td></tr>
+        <tr ng-repeat="item in tag | filter : {chapter : filterChapter}"><td ng-click="fastForwardTo(item.starttime)">{{item.chapter + " " + item.tag}}</td><td>{{item.starttime}}</td><td>{{item.endtime}}</td>
+          <td><i ng-click="removeTag(item)" style="color:red;" class="fa fa-times fa-lg"></i></td><td><i class="fa fa-pencil fa-lg"></i></td>
+        </tr>
 
       </table>
 
      
-      <!--  <div class="pull-right">
-        <button class="btn btn-primary" ng-click="writeLinkToDatabase(urlLink)">Write to database</button>
-      </div>
-      -->
+    
       <div style="text-align: center;"ng-repeat="item in messages">
         {{item.url}}
       </div>
