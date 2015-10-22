@@ -12,7 +12,9 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		cl : ''
 	}];
 	
+	
 	function setChapters(){
+	
 		$timeout(function(){
 
 
@@ -24,9 +26,21 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 					$scope.chaptersInObject=[];
 					snapshot.forEach(function(childSnapshot) {
 					    console.log('child: ', childSnapshot.val().chapter);
-					    $scope.chaptersInObject.push({name : childSnapshot.val().chapter});
-						$scope.chaptersInObject[refChapterIndex].cl = "" + refChapterIndex;
-						refChapterIndex++;
+					    
+					    //do not add duplicate chapters
+					    var checkForDuplicate = function(object,str){
+							for(var i = 0 ; i < object.length ; i++){
+								if(object[i].name == str){
+									return false;
+								}
+							}
+							return true;
+						} 
+					    if(!$scope.chaptersInObject.length || checkForDuplicate($scope.chaptersInObject,childSnapshot.val().chapter)){
+					    	$scope.chaptersInObject.push({name : childSnapshot.val().chapter});
+					    	$scope.chaptersInObject[refChapterIndex].cl = "" + refChapterIndex;
+					    	refChapterIndex++;
+					    }					    					
 
 					 //    $scope.chaptersInObject.push(childSnapshot.val());
 						// $scope.chaptersInObject[refChapterIndex].cl = "" + refChapterIndex;
@@ -41,6 +55,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 	}
 	
+
 	function setMarkersForVideo(){
 		// This is for the when you first open the window, the default video shown
 		refTag.on('child_added',function(childSnapShot){
