@@ -4,14 +4,42 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
   	var ref = new Firebase("https://flickering-heat-6138.firebaseio.com");
   	var refTag = ref.child('tag');
 	var refChapters = ref.child('chapters');
-	var refLink = ref.child('link');
 	
 	$scope.urlLink = '//www.youtube.com/watch?v=oAtjf6Ijmtw';
-  	$scope.messages = $firebaseArray(refLink);
   	$scope.tag = $firebaseArray(refTag);
-	$scope.chapters = $firebaseArray(refChapters);
-	$scope.chaptersInObject = [];
+	$scope.chaptersInObject = [{
+		name : '',
+		cl : ''
+	}];
 	
+	function setChapters(){
+		$timeout(function(){
+
+
+			videojs("vid1").ready(function(){
+				var refChapterIndex = 0;
+				refTag.on('value',function(snapshot){
+					var object = snapshot.val();
+					console.log('setChapters : ', object);
+					$scope.chaptersInObject=[];
+					snapshot.forEach(function(childSnapshot) {
+					    console.log('child: ', childSnapshot.val().chapter);
+					    $scope.chaptersInObject.push({name : childSnapshot.val().chapter});
+						$scope.chaptersInObject[refChapterIndex].cl = "" + refChapterIndex;
+						refChapterIndex++;
+
+					 //    $scope.chaptersInObject.push(childSnapshot.val());
+						// $scope.chaptersInObject[refChapterIndex].cl = "" + refChapterIndex;
+						// refChapterIndex++;
+					});
+					setMarkersForVideo();
+					refChapterIndex = 0;
+				});
+			});
+			console.log('boom',$scope.chaptersInObject);
+		},1000);
+
+	}
 	
 	function setMarkersForVideo(){
 		// This is for the when you first open the window, the default video shown
@@ -93,9 +121,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			// }
 	}
 	$scope.removeTag = function(item){
-		console.log('$scope.tag before: ', $scope.tag);
 		$scope.tag.$remove(item);
-		console.log('$scope.tag after: ', $scope.tag);
 	}
 
 
@@ -116,16 +142,13 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	}
 
 	$scope.addChapter = function(chapter){
-		
-		$scope.chapters.$add({
-			name : chapter
-		});
-
+		//will push a chapter tempoparily until a user successfully creates a tag
+		//a temporary chapter is added for dropdown chapter visibility purposes
+		$scope.chaptersInObject.push({name : chapter});
 	};
 
 
 	var init = function(){
-		
 		videojs('vid1', {
 
 	        plugins: {
@@ -156,9 +179,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		   
 		});
 		//player.markers.removeAll();
-
-
-
 	}
 	var setupSlider = function(){
 		// videojs("vid1").ready(function(){
@@ -171,19 +191,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	setupSlider();
 
 	var refChapterIndex = 0;
-	videojs("vid1").ready(function(){
-		refChapters.on('value',function(snapshot){
-			snapshot.forEach(function(childSnapshot) {
-			    $scope.chaptersInObject.push(childSnapshot.val());
-				$scope.chaptersInObject[refChapterIndex].cl = "" + refChapterIndex;
-				refChapterIndex++;
-			});
-			setMarkersForVideo();
-			refChapterIndex = 0;
-		});
-
-
-	});
+	
+	setChapters();
 
 	
 }]);

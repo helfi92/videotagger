@@ -14,7 +14,7 @@
             <div style="margin-top:20px;margin-bottom:20px;">
               <div style="display:inline-block;"><img style="height:50px;"src="http://icons.iconarchive.com/icons/icons8/ios7/256/Very-Basic-Filter-icon.png"></div><div style="display:inline-block;"><h5 style="color:white;">Filter by:</h5></div> 
               <select class="form-control" ng-model="filterChapter">
-                <option ng-repeat="item in chapters track by $index" value="{{item.name}}">{{item.name}}</option>
+                <option ng-repeat="item in chaptersInObject track by $index" value="{{item.name}}">{{item.name}}</option>
               </select>
 
             </div>
@@ -70,54 +70,6 @@
 
       </table>
 
-     
-    
-      <div style="text-align: center;"ng-repeat="item in messages">
-        {{item.url}}
-      </div>
-      
-      <div style="padding:50px;">
-        
-
-          Chapter: 
-          <select class="form-control" ng-model="selectedChapter">
-            <option ng-repeat="item in chapters track by $index"  value="{{item.name}}">{{item.name}}</option>
-          </select>
-
-
-
-        <div class="row text-center">
-
-          <div class="col-xs-4"><label>Tag Name</label>
-            <input ng-model="tagname">
-          </div>
-          <div class="col-xs-4"><label>Start Time</label>
-            <input ng-model="starttime">
-          </div>
-          <div class="col-xs-4"><label>End Time</label>
-            <input ng-model="endtime">
-          </div>
-        </div>
-        <div style="margin-top:25px;"><button ng-click="addTag(selectedChapter,tagname,starttime,endtime,urlLink,'Hey, this is my annotation')" class="pull-right btn btn-primary">Add it</button></div>
-      </div>
-      
-     
-     <div class="row">
-      <div class="col-xs-7">
-        <input ng-model="ch"><button ng-click="addChapter(ch)" class="btn btn-primary">Add chapter</button>
-      </div>
-      <!-- Filer by Chapter -->
-      <div class="col-xs-5">
-          
-          Filter by: 
-          <select class="form-control" ng-model="filterChapter">
-            <option ng-repeat="item in chapters track by $index" value="{{item.name}}">{{item.name}}</option>
-          </select>
-      </div>
-      
-     </div>
-
-
   </div>
 </div>
 
@@ -136,7 +88,7 @@
         <div>
           Chapter: 
           <select class="form-control" ng-model="selectedChapter">
-            <option ng-repeat="item in chapters track by $index"  value="{{item.name}}">{{item.name}}</option>
+            <option ng-repeat="item in chaptersInObject track by $index"  value="{{item.name}}">{{item.name}}</option>
           </select>
         </div>
 
