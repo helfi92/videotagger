@@ -12,6 +12,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		cl : ''
 	}];
 	
+	$scope.currentVideoTagList = [];
 	
 	function setChapters(){
 	
@@ -23,6 +24,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 				refTag.on('value',function(snapshot){
 					var object = snapshot.val();
 					console.log('setChapters : ', object);
+					setCurrentVideoTagList(snapshot);
 					$scope.chaptersInObject=[];
 					snapshot.forEach(function(childSnapshot) {
 					    console.log('child: ', childSnapshot.val().chapter);
@@ -46,6 +48,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 						// $scope.chaptersInObject[refChapterIndex].cl = "" + refChapterIndex;
 						// refChapterIndex++;
 					});
+					
+					
 					setMarkersForVideo();
 					refChapterIndex = 0;
 				});
@@ -54,39 +58,40 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		},1000);
 
 	}
+	function setCurrentVideoTagList(object){
+		$scope.currentVideoTagList = [];
+		object.forEach(function(childSnapshot) {
+		    if(childSnapshot.val().link == $scope.urlLink){
+		    	$scope.currentVideoTagList.push(childSnapshot.val());
+		    }
+		    
+		});
+		console.log('currentVideoTagList: ', $scope.currentVideoTagList);
+	}
 	
 
 	function setMarkersForVideo(){
-		// This is for the when you first open the window, the default video shown
-		refTag.on('child_added',function(childSnapShot){
-			
-			//if the snap has the same url, add the marker
-			var player = videojs('vid1');
-			var object = childSnapShot.val();
-			for(var i = 0 ; i < $scope.chaptersInObject.length ; i++){
-				if(object.chapter == $scope.chaptersInObject[i].name){
-					var classColor = "color" + $scope.chaptersInObject[i].cl;
+	    for( var i = 0 ; i < $scope.currentVideoTagList.length ; i++){
+	    	var object = $scope.currentVideoTagList[i];
+	    	for(var j = 0 ; j < $scope.chaptersInObject.length ; j++){
+				if(object.chapter == $scope.chaptersInObject[j].name){
+					var classColor = "color" + $scope.chaptersInObject[j].cl;
 					break;
 				}
 			}
-			if(object.link == $scope.urlLink){
+			var time = object.starttime;
+			var goTotime = stringToMilliseconds(time);
+			var tagName = object.tag;
 
-				var time = object.starttime;
-				var goTotime = stringToMilliseconds(time);
-				var tagName = object.tag;
+			var player = videojs('vid1');
+			player.markers.add([{ 
+				time: goTotime, 
+				text: tagName,
+				class: "" + classColor
+			}]);
 
-				
-				player.markers.add([{ 
-					time: goTotime, 
-					text: tagName,
-					class: "" + classColor
-				}]);
-				//change color css through index
-
-
-			}else{
-			}
-		});
+	    }			    
+			
 	}	
 
 	$scope.goButtonClicked = function(url){
@@ -96,25 +101,9 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			player.bigPlayButton.show();
 			
 			player.markers.removeAll();
-
-			refTag = "";
-			refTag = ref.child('tag');
-
-			refTag.on('child_added',function(childSnapShot){
 			
-				//if the snap has the same url, add the marker
-				var object = childSnapShot.val();
-				if(object.link == $scope.urlLink){
-					var time = object.starttime;
-					var goTotime = stringToMilliseconds(time);
-
-					var tagName = object.tag;
-					player.markers.add([{ time: goTotime, text: tagName}]);
-				}else{
-				}
+			setChapters();
 			
-
-			});
 		});
 
 	};
