@@ -14,34 +14,36 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	
 	$scope.currentVideoTagList = [];
 	
+	
 	function setChapters(){
 	
 		$timeout(function(){
 			videojs("vid1").ready(function(){
-				var refChapterIndex = 0;
+				
 				refTag.on('value',function(snapshot){
+					var refChapterIndex = 0;
 					setCurrentVideoTagList(snapshot);
 					$scope.chaptersInObject=[];
 					for( var i = 0 ; i < $scope.currentVideoTagList.length ; i++){
 						//do not add duplicate chapters
 					    var checkForDuplicate = function(object,str){
-							for(var i = 0 ; i < object.length ; i++){
-								if(object[i].name == str){
+							for(var j = 0 ; j < object.length ; j++){
+								if(object[j].name == str){
 									return false;
 								}
 							}
 							return true;
 						}
 						if(!$scope.chaptersInObject.length || checkForDuplicate($scope.chaptersInObject,$scope.currentVideoTagList[i].chapter)){
-					    	$scope.chaptersInObject.push({name : $scope.currentVideoTagList[i].chapter});
-					    	$scope.chaptersInObject[refChapterIndex].cl = "" + refChapterIndex;
+					    	$scope.chaptersInObject.push({name : $scope.currentVideoTagList[i].chapter, cl : "" + refChapterIndex});
+					    	//$scope.chaptersInObject[refChapterIndex].cl = "" + refChapterIndex;
 					    	refChapterIndex++;
 					    }	 
 
 					}
-
+					setMarkersForVideo();
 				});
-				setMarkersForVideo();
+				
 			});		
 			
 		},1000);
@@ -60,6 +62,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	
 
 	function setMarkersForVideo(){
+	    var player = videojs('vid1');
+	    player.markers.removeAll();
 	    for( var i = 0 ; i < $scope.currentVideoTagList.length ; i++){
 	    	var object = $scope.currentVideoTagList[i];
 	    	for(var j = 0 ; j < $scope.chaptersInObject.length ; j++){
@@ -113,8 +117,21 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			// 	console.log('Not logged in, cant write to database');
 			// }
 	}
-	$scope.removeTag = function(item){
-		$scope.tag.$remove(item);
+	$scope.removeTag = function(item,index){
+		//$scope.currentVideoTagList.$remove(item);
+		$scope.currentVideoTagList.splice(index,1);
+		console.log('past ', $scope.currentVideoTagList);
+		
+
+		refTag.on('child_added',function(snapshot){
+			console.log('item is : ', item);
+			console.log('child added is: ', snapshot.val());
+			if(snapshot.val().link == item.link && snapshot.val().starttime == item.starttime && snapshot.val().endtime == item.endtime ){
+				snapshot.ref().remove();
+				//$scope.tag.$remove(snapshot.ref().remove());
+			}
+		});
+
 	}
 
 
