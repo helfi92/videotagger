@@ -17,19 +17,13 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	function setChapters(){
 	
 		$timeout(function(){
-
-
 			videojs("vid1").ready(function(){
 				var refChapterIndex = 0;
 				refTag.on('value',function(snapshot){
-					var object = snapshot.val();
-					console.log('setChapters : ', object);
 					setCurrentVideoTagList(snapshot);
 					$scope.chaptersInObject=[];
-					snapshot.forEach(function(childSnapshot) {
-					    console.log('child: ', childSnapshot.val().chapter);
-					    
-					    //do not add duplicate chapters
+					for( var i = 0 ; i < $scope.currentVideoTagList.length ; i++){
+						//do not add duplicate chapters
 					    var checkForDuplicate = function(object,str){
 							for(var i = 0 ; i < object.length ; i++){
 								if(object[i].name == str){
@@ -37,24 +31,19 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 								}
 							}
 							return true;
-						} 
-					    if(!$scope.chaptersInObject.length || checkForDuplicate($scope.chaptersInObject,childSnapshot.val().chapter)){
-					    	$scope.chaptersInObject.push({name : childSnapshot.val().chapter});
+						}
+						if(!$scope.chaptersInObject.length || checkForDuplicate($scope.chaptersInObject,$scope.currentVideoTagList[i].chapter)){
+					    	$scope.chaptersInObject.push({name : $scope.currentVideoTagList[i].chapter});
 					    	$scope.chaptersInObject[refChapterIndex].cl = "" + refChapterIndex;
 					    	refChapterIndex++;
-					    }					    					
+					    }	 
 
-					 //    $scope.chaptersInObject.push(childSnapshot.val());
-						// $scope.chaptersInObject[refChapterIndex].cl = "" + refChapterIndex;
-						// refChapterIndex++;
-					});
-					
-					
-					setMarkersForVideo();
-					refChapterIndex = 0;
+					}
+
 				});
-			});
-			console.log('boom',$scope.chaptersInObject);
+				setMarkersForVideo();
+			});		
+			
 		},1000);
 
 	}
