@@ -13,7 +13,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	}];
 	
 	$scope.currentVideoTagList = [];
-	
+
 	
 	function setChapters(){
 	
@@ -132,6 +132,32 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			}
 		});
 
+	}
+	$scope.editTag = function(item,index){
+		console.log(item);
+		$scope.currentTagOnEdit = item;
+
+		$scope.selectedChapter = item.chapter;
+		$scope.tagname = item.tag;
+		$scope.starttime = item.starttime;
+		$scope.endtime = item.endtime;
+		angular.element('#editTagModal').modal()
+	}
+	$scope.updateTag = function(){
+		refTag.on('child_added',function(snapshot){
+			console.log('item is : ', $scope.currentTagOnEdit);
+			console.log('child added is: ', snapshot.val());
+			if(snapshot.val().link == $scope.currentTagOnEdit.link && snapshot.val().starttime == $scope.currentTagOnEdit.starttime && snapshot.val().endtime == $scope.currentTagOnEdit.endtime ){
+				snapshot.ref().update({
+					link : $scope.urlLink,
+					annotation : 'annotation',
+					chapter : $scope.selectedChapter,
+					tag : $scope.tagname,
+					starttime : $scope.starttime,
+					endtime : $scope.endtime
+				});
+			}
+		});	
 	}
 
 
