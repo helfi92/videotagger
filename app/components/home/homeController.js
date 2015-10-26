@@ -101,6 +101,14 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 	};
 	
+	$scope.addTagButtonOnClick = function(){
+		$scope.selectedChapter = '';
+		$scope.tagname = '';
+		$scope.starttime = '';
+		$scope.endtime = '';
+		angular.element('#addTagModal').modal();
+
+	}
 		
 	
 	$scope.addTag = function(chapter,tag,starttime,endtime,link,annotation){
@@ -141,7 +149,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		$scope.tagname = item.tag;
 		$scope.starttime = item.starttime;
 		$scope.endtime = item.endtime;
-		angular.element('#editTagModal').modal()
+		angular.element('#editTagModal').modal();
 	}
 	$scope.updateTag = function(){
 		refTag.on('child_added',function(snapshot){
