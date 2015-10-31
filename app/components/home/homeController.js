@@ -73,7 +73,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 				}
 			}
 			var time = object.starttime;
-			var goTotime = stringToMilliseconds(time);
+			//var goTotime = stringToMilliseconds(time);
+			var goTotime = time;
 			var tagName = object.tag;
 
 			var player = videojs('vid1');
@@ -107,6 +108,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		$scope.starttime = '';
 		$scope.endtime = '';
 		angular.element('#addTagModal').modal();
+		rangeSliderInitAndHideVideoControlBar();
+
 
 	}
 		
@@ -180,7 +183,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	}
 	
 	$scope.fastForwardTo = function(time){
-		var goTotime = stringToMilliseconds(time);
+		//var goTotime = stringToMilliseconds(time);
+		var goTotime = time;
 		
 		document.getElementById('vid1').player.currentTime(goTotime);
 	}
@@ -237,6 +241,62 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	var refChapterIndex = 0;
 	
 	setChapters();
+
+
+
+
+	//seek bar
+	// var seekBar = document.getElementById('seek-bar');
+	// var player = videojs('vid1');
+	// seekBar.addEventListener("change", function() {
+	//   // Calculate the new time
+	//   console.log('seekBar value is: ', seekBar.value);
+	//   var time = player.duration() * (seekBar.value / 100);
+
+	//   // Update the video time
+	//   document.getElementById('vid1').player.currentTime(time);
+	  
+	// });	
+
+	function rangeSliderInitAndHideVideoControlBar(){
+		var player = videojs('vidModal');
+		player.controlBar.hide();
+
+		var html5Slider = document.getElementById('edit-tag-slider');
+		noUiSlider.create(html5Slider, {
+			start: [ 0, 30 ],
+			connect: true,
+			range: {
+				'min': 0,
+				'max': 100
+			}
+		});
+		$scope.starttime = 0;
+		$scope.endtime = player.duration() * 0.3;
+
+		//update video with seek-bar
+		html5Slider.noUiSlider.on('update', function( values, handle ) {
+			var value = values[handle];
+			
+
+			//right slider changed
+			if ( handle ) {
+				//inputNumber.value = value;
+				$scope.endtime = player.duration() * (value / 100);
+			} else {//left slider changed
+				$scope.starttime = player.duration() * (value / 100);;
+				var time = player.duration() * (value / 100);
+				//select.value = Math.round(value);
+				player.currentTime(time);
+
+			}
+			$timeout();
+			//$scope.$apply();
+		});	
+	}
+	
+	
+
 
 	
 }]);

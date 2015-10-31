@@ -45,6 +45,8 @@
 
     		</video>
 
+        
+
       </div>
         
       
@@ -56,7 +58,7 @@
      <!-- video table -->
       <table style="width:100%;text-align: center;border: 1px solid black;margin-top:20px;">
         <tr><td>Tag Name</td><td>Start Time</td><td>End Time</td><td><!--column reserved for removing--></td><td><!--column reserved for edit--></td></tr>
-        <tr ng-repeat="item in currentVideoTagList  | filter : {chapter : filterChapter} track by $index"><td ng-click="fastForwardTo(item.starttime)">{{item.chapter + " " + item.tag}}</td><td>{{item.starttime}}</td><td>{{item.endtime}}</td>
+        <tr ng-repeat="item in currentVideoTagList  | filter : {chapter : filterChapter} track by $index"><td ng-click="fastForwardTo(item.starttime)">{{item.tag}}</td><td>{{item.starttime}}</td><td>{{item.endtime}}</td>
           <td><i ng-click="removeTag(item,$index)" style="color:red;" class="fa fa-times fa-lg"></i></td><td><i ng-click="editTag(item,$index)" class="fa fa-pencil fa-lg"></i></td>
         </tr>
 
@@ -66,93 +68,8 @@
 </div>
 
 <!-- modal views -->
+<div ng-include="'app/components/home/addEditTagModal.html'"></div>
 
-<!-- add tag Modal -->
-<div class="modal fade" id="addTagModal" tabindex="-1" role="dialog" aria-labelledby="addTagLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="addTagLabel">Add a Tag</h4>
-      </div>
-      <div class="modal-body">
-        
-        <div>
-          Chapter: 
-          <select class="form-control" ng-model="selectedChapter">
-            <option ng-repeat="item in chaptersInObject track by $index"  value="{{item.name}}">{{item.name}}</option>
-          </select>
-        </div>
-
-        <div class="row ">
-
-          <div class="col-xs-4"><label>Tag Name</label>
-            <input ng-model="tagname">
-          </div>
-          <div class="col-xs-4"><label>Start Time</label>
-            <input ng-model="starttime">
-          </div>
-          <div class="col-xs-4"><label>End Time</label>
-            <input ng-model="endtime">
-          </div>
-        </div>
-
-        <div>
-          <br>
-          <input placeholder="Add a chapter" ng-model="ch"> <button ng-click="addChapter(ch)">Add Chapter</button>
-        </div>
-
-      </div>
-      <div class="modal-footer">
-        <button ng-click="addTag(selectedChapter,tagname,starttime,endtime,urlLink,'Hey, this is my annotation')" type="button" class="btn btn-primary" data-dismiss="modal">Create</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- edit tag Modal -->
-<div class="modal fade" id="editTagModal" tabindex="-1" role="dialog" aria-labelledby="editTagLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="editTagLabel">Edit a Tag</h4>
-      </div>
-      <div class="modal-body">
-        
-        <div>
-          Chapter: 
-          <select class="form-control" ng-model="selectedChapter">
-            <option ng-repeat="item in chaptersInObject track by $index"  value="{{item.name}}">{{item.name}}</option>
-          </select>
-        </div>
-
-        <div class="row ">
-
-          <div class="col-xs-4"><label>Tag Name</label>
-            <input ng-model="tagname">
-          </div>
-          <div class="col-xs-4"><label>Start Time</label>
-            <input ng-model="starttime">
-          </div>
-          <div class="col-xs-4"><label>End Time</label>
-            <input ng-model="endtime">
-          </div>
-        </div>
-
-        <div>
-          <br>
-          <input placeholder="Add a chapter" ng-model="ch"> <button ng-click="addChapter(ch)">Add Chapter</button>
-        </div>
-
-      </div>
-      <div class="modal-footer">
-        <button ng-click="updateTag()" type="button" class="btn btn-primary" data-dismiss="modal">Update</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 
 
