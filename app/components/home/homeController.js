@@ -110,6 +110,12 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		angular.element('#addTagModal').modal();
 		rangeSliderInitAndHideVideoControlBar();
 
+		$('#addTagModal').on('hide.bs.modal', function (e) {
+		  // do something...
+		  var player = videojs('vidModal');
+		  player.player().pause();
+		  player.player().currentTime(1)
+		})
 
 	}
 		
@@ -173,6 +179,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 
 	function stringToMilliseconds (time){
+		
 		var strTimeArray = time.split(":");
 		var seconds = parseInt(strTimeArray[0],10) * 60;
 		var ms = parseInt(strTimeArray[1],10);
@@ -180,6 +187,15 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 		var goTotime = seconds + ms;
 		return goTotime;
+	}
+	 $scope.millisecondsToFormattedTime = function(milli){
+		var time = new Date(milli * 1000);
+		var minutes = time.getMinutes();
+		var seconds = ("0"+time.getSeconds()).slice(-2);
+		console.log('minutes: ',minutes);
+		console.log('seconds: ',seconds);
+
+		return (minutes + ":" + seconds);
 	}
 	
 	$scope.fastForwardTo = function(time){

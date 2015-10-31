@@ -58,7 +58,7 @@
      <!-- video table -->
       <table style="width:100%;text-align: center;border: 1px solid black;margin-top:20px;">
         <tr><td>Tag Name</td><td>Start Time</td><td>End Time</td><td><!--column reserved for removing--></td><td><!--column reserved for edit--></td></tr>
-        <tr ng-repeat="item in currentVideoTagList  | filter : {chapter : filterChapter} track by $index"><td ng-click="fastForwardTo(item.starttime)">{{item.tag}}</td><td>{{item.starttime}}</td><td>{{item.endtime}}</td>
+        <tr ng-repeat="item in currentVideoTagList  | filter : {chapter : filterChapter} track by $index"><td ng-click="fastForwardTo(item.starttime)">{{item.tag}}</td><td>{{millisecondsToFormattedTime(item.starttime)}}</td><td>{{millisecondsToFormattedTime(item.endtime)}}</td>
           <td><i ng-click="removeTag(item,$index)" style="color:red;" class="fa fa-times fa-lg"></i></td><td><i ng-click="editTag(item,$index)" class="fa fa-pencil fa-lg"></i></td>
         </tr>
 
