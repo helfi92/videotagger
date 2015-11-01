@@ -279,14 +279,16 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		player.controlBar.hide();
 
 		var html5Slider = document.getElementById('edit-tag-slider');
-		noUiSlider.create(html5Slider, {
-			start: [ 0, 30 ],
-			connect: true,
-			range: {
-				'min': 0,
-				'max': 100
-			}
-		});
+		if(html5Slider.classList.length == 0){
+			noUiSlider.create(html5Slider, {
+				start: [ 0, 30 ],
+				connect: true,
+				range: {
+					'min': 0,
+					'max': 100
+				}
+			});
+		}	
 		$scope.starttime = 0;
 		$scope.endtime = player.duration() * 0.3;
 
