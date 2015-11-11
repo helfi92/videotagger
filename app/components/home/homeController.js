@@ -108,11 +108,11 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		$scope.starttime = '';
 		$scope.endtime = '';
 		angular.element('#addTagModal').modal();
-		rangeSliderInitAndHideVideoControlBar();
+		rangeSliderInitAndHideVideoControlBar(0,30,'edit-tag-slider-add','vidModal-add');
 
 		$('#addTagModal').on('hide.bs.modal', function (e) {
 		  // do something...
-		  var player = videojs('vidModal');
+		  var player = videojs('vidModal-add');		  
 		  player.player().pause();
 		  player.player().currentTime(1)
 		})
@@ -159,11 +159,23 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		$scope.starttime = item.starttime;
 		$scope.endtime = item.endtime;
 		angular.element('#editTagModal').modal();
+		$('#editTagModal').on('hide.bs.modal', function (e) {
+		  // do something...
+		  var player = videojs('vidModal-edit');		  
+		  player.player().pause();
+		  player.player().currentTime(1)
+		})
+		rangeSliderInitAndHideVideoControlBar(10,40,"edit-tag-slider-edit",'vidModal-edit');
 	}
-	$scope.updateTag = function(){
+	//start time and endtime not inputed in paramters because they are handled by the range slider function
+	$scope.updateTag = function(tagname,chapter){
 		refTag.on('child_added',function(snapshot){
-			console.log('item is : ', $scope.currentTagOnEdit);
-			console.log('child added is: ', snapshot.val());
+			$scope.tagname = tagname;
+			$scope.selectedChapter = chapter;
+			
+			// console.log('item is : ', $scope.currentTagOnEdit);
+			// console.log('child added is: ', snapshot.val());
+
 			if(snapshot.val().link == $scope.currentTagOnEdit.link && snapshot.val().starttime == $scope.currentTagOnEdit.starttime && snapshot.val().endtime == $scope.currentTagOnEdit.endtime ){
 				snapshot.ref().update({
 					link : $scope.urlLink,
@@ -175,6 +187,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 				});
 			}
 		});	
+
+		
 	}
 
 
@@ -192,9 +206,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		var time = new Date(milli * 1000);
 		var minutes = time.getMinutes();
 		var seconds = ("0"+time.getSeconds()).slice(-2);
-		console.log('minutes: ',minutes);
-		console.log('seconds: ',seconds);
-
+		
 		return (minutes + ":" + seconds);
 	}
 	
@@ -274,14 +286,22 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	  
 	// });	
 
-	function rangeSliderInitAndHideVideoControlBar(){
-		var player = videojs('vidModal');
+	function rangeSliderInitAndHideVideoControlBar(sliderStart,sliderEnd,sliderId,playerModal){
+		var player = videojs(playerModal);
 		player.controlBar.hide();
 
-		var html5Slider = document.getElementById('edit-tag-slider');
+		var sliderStarttime = 0;
+		var sliderEndtime = 30;
+		if(!!sliderStart){
+			sliderStarttime = sliderStart;
+			sliderEndtime = sliderEnd;
+		}
+
+
+		var html5Slider = document.getElementById(sliderId);
 		if(html5Slider.classList.length == 0){
 			noUiSlider.create(html5Slider, {
-				start: [ 0, 30 ],
+				start: [ sliderStarttime, sliderEndtime ],
 				connect: true,
 				range: {
 					'min': 0,
