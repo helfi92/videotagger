@@ -15,10 +15,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		name : '',
 		cl : ''
 	}];
-	
-	$scope.currentVideoTagList = [];
-
-	
+		
 	function setChapters(){
 	
 		$timeout(function(){
