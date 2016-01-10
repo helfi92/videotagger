@@ -49,7 +49,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			
 		});
 	}
-	
+	//
 	function setCurrentVideoTagList(object,callback){
 		$scope.currentVideoTagList = [];
 		object.forEach(function(childSnapshot) {
