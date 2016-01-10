@@ -23,34 +23,34 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 				
 				refTag.on('value',function(snapshot){
 					var refChapterIndex = 0;
-					setCurrentVideoTagList(snapshot);
-					$scope.chaptersInObject=[];
-					for( var i = 0 ; i < $scope.currentVideoTagList.length ; i++){
-						//do not add duplicate chapters
-					    var checkForDuplicate = function(object,str){
-							for(var j = 0 ; j < object.length ; j++){
-								if(object[j].name == str){
-									return false;
+					setCurrentVideoTagList(snapshot,function(){
+						$scope.chaptersInObject=[];
+						for( var i = 0 ; i < $scope.currentVideoTagList.length ; i++){
+							//do not add duplicate chapters
+						    var checkForDuplicate = function(object,str){
+								for(var j = 0 ; j < object.length ; j++){
+									if(object[j].name == str){
+										return false;
+									}
 								}
+								return true;
 							}
-							return true;
-						}
-						if(!$scope.chaptersInObject.length || checkForDuplicate($scope.chaptersInObject,$scope.currentVideoTagList[i].chapter)){
-					    	$scope.chaptersInObject.push({name : $scope.currentVideoTagList[i].chapter, cl : "" + refChapterIndex});
-					    	//$scope.chaptersInObject[refChapterIndex].cl = "" + refChapterIndex;
-					    	refChapterIndex++;
-					    }	 
+							if(!$scope.chaptersInObject.length || checkForDuplicate($scope.chaptersInObject,$scope.currentVideoTagList[i].chapter)){
+						    	$scope.chaptersInObject.push({name : $scope.currentVideoTagList[i].chapter, cl : "" + refChapterIndex});
+						    	refChapterIndex++;
+						    }	 
 
-					}
-					setMarkersForVideo();
+						}
+						setMarkersForVideo();
+						});
 				});
 				
 			});		
 			
-		},1000);
-
+		});
 	}
-	function setCurrentVideoTagList(object){
+	
+	function setCurrentVideoTagList(object,callback){
 		$scope.currentVideoTagList = [];
 		object.forEach(function(childSnapshot) {
 		    if(childSnapshot.val().link == $scope.urlLink){
@@ -59,6 +59,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		    
 		});
 		console.log('currentVideoTagList: ', $scope.currentVideoTagList);
+		callback();
 	}
 	
 
