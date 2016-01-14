@@ -8,18 +8,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 
 
-	$scope.tagsTable = {
-		text : "Show Table",
-		visibility : false,
-	};
-	$scope.toggleTagsTable = function(){
-		$scope.tagsTable.visibility = !$scope.tagsTable.visibility;
-		if($scope.tagsTable.visibility == true){
-			$scope.tagsTable.text = "Hide Table";
-		}else{
-			$scope.tagsTable.text = "Show Table";
-		}
-	}
+	
 	$scope.urlLink = '//www.youtube.com/watch?v=iQ4LJSxf3JE&feature=youtu.be.';
   	$scope.tag = $firebaseArray(refTag);
 	$scope.tagTypes = [{
@@ -32,6 +21,41 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	
 	$scope.tagType = {};
   	$scope.tagTypes = [];
+
+  	$scope.tagsTable = {
+		text : "Show Table",
+		visibility : false,
+	};
+
+
+
+
+    $scope.doneEditing = function (item,newVal,columnNumber) {
+        //dong some background ajax calling for persistence...
+        console.log('done editing: ',item);
+        if(columnNumber == 1){
+			$scope.tagname = newVal;
+			item.editingTag = false;
+        }else if(columnNumber == 2){
+        	$scope.starttime = newVal;
+        	item.editingStarttime = false;
+        }else if(columnNumber == 3){
+        	$scope.endtime = newVal;
+        	item.editingEndtime = false;
+        }
+        //$scope.updateTag(item.tag,item.chapter);
+        $scope.updateTag();
+
+    };
+
+	$scope.toggleTagsTable = function(){
+		$scope.tagsTable.visibility = !$scope.tagsTable.visibility;
+		if($scope.tagsTable.visibility == true){
+			$scope.tagsTable.text = "Hide Table";
+		}else{
+			$scope.tagsTable.text = "Show Table";
+		}
+	}
 
   	$scope.trustAsHtml = function(value) {
 	  return $sce.trustAsHtml(value);
@@ -204,7 +228,14 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		});
 
 	}
-	$scope.editTag = function(item,index){
+	$scope.editTag = function(item,columnNumber){
+		if(columnNumber == 1){
+			item.editingTag = true;
+		}else if(columnNumber == 2){
+			item.editingStarttime = true;
+		}else if(columnNumber == 3){
+			item.editingEndtime = true;
+		}
 		console.log(item);
 		$scope.currentTagOnEdit = item;
 
@@ -212,24 +243,12 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		$scope.tagname = item.tag;
 		$scope.starttime = item.starttime;
 		$scope.endtime = item.endtime;
-		angular.element('#editTagModal').modal();
-		$('#editTagModal').on('hide.bs.modal', function (e) {
-		  // do something...
-		  var player = videojs('vidModal-edit');		  
-		  player.player().pause();
-		  player.player().currentTime(1)
-		});
-		rangeSliderInitAndHideVideoControlBar(item.starttime,item.endtime,'edit-tag-slider-edit','vidModal-edit');
+		
+		//rangeSliderInitAndHideVideoControlBar(item.starttime,item.endtime,'edit-tag-slider-edit','vidModal-edit');
 	}
 	//start time and endtime not inputed in paramters because they are handled by the range slider function
-	$scope.updateTag = function(tagname,chapter){
+	$scope.updateTag = function(){
 		refTag.on('child_added',function(snapshot){
-			$scope.tagname = tagname;
-			$scope.tagType = chapter;
-			
-			// console.log('item is : ', $scope.currentTagOnEdit);
-			// console.log('child added is: ', snapshot.val());
-
 			if(snapshot.val().link == $scope.currentTagOnEdit.link && snapshot.val().starttime == $scope.currentTagOnEdit.starttime && snapshot.val().endtime == $scope.currentTagOnEdit.endtime ){
 				snapshot.ref().update({
 					link : $scope.urlLink,
@@ -240,9 +259,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 					endtime : $scope.endtime
 				});
 			}
-		});	
-
-		
+		});			
 	}
 
 
