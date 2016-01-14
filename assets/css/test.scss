@@ -1,0 +1,20 @@
+.background-container {
+	  background-color: white;
+	  opacity: 0.5;
+	  position: fixed;
+	  width: 100%;
+	  height: 100%;
+	  z-index: -5;
+
+  .background {
+	    position: fixed;
+	    top: 0;
+	    height: 100%;
+	    width: 100%;
+	    opacity: 0.2;
+	    background-image: url('/assets/img/mcgill-university-squad.jpg'); 
+  }
+
+  
+}
+  

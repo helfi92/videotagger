@@ -1,4 +1,4 @@
-app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','$timeout', function($scope,$rootScope,Auth,$firebaseArray,$timeout){
+app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','$timeout','$sce', function($scope,$rootScope,Auth,$firebaseArray,$timeout,$sce){
 
 
   	var ref = new Firebase("https://flickering-heat-6138.firebaseio.com");
@@ -8,14 +8,62 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 
 
-
+	$scope.tagsTable = {
+		text : "Show Table",
+		visibility : false,
+	};
+	$scope.toggleTagsTable = function(){
+		$scope.tagsTable.visibility = !$scope.tagsTable.visibility;
+		if($scope.tagsTable.visibility == true){
+			$scope.tagsTable.text = "Hide Table";
+		}else{
+			$scope.tagsTable.text = "Show Table";
+		}
+	}
 	$scope.urlLink = '//www.youtube.com/watch?v=iQ4LJSxf3JE&feature=youtu.be.';
   	$scope.tag = $firebaseArray(refTag);
-	$scope.chaptersInObject = [{
+	$scope.tagTypes = [{
 		name : '',
 		cl : ''
 	}];
-		
+	
+	$scope.currentVideoTagList = [];
+	
+	
+	$scope.tagType = {};
+  	$scope.tagTypes = [];
+
+  	$scope.trustAsHtml = function(value) {
+	  return $sce.trustAsHtml(value);
+	};
+
+
+	$scope.refreshTagSearchResults = function($select){
+	 var search = $select.search,
+	   list = angular.copy($select.items), 
+	   FLAG = -1;
+
+	 //remove last user input
+     list = list.filter(function(item) { 
+      	return item.id !== FLAG; 
+     });
+
+	 if (!search) {
+	   //use the predefined list
+	   $select.items = list;
+	 }
+	 else {	 
+	   //manually add user input and set selection
+	   var userInputItem = {
+	     id: FLAG, 
+	     name: search
+	   };
+	   $select.items = [userInputItem].concat(list);
+	   $select.selected = userInputItem;
+	 }
+	}
+
+	
 	function setChapters(){
 	
 		$timeout(function(){
@@ -23,34 +71,37 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 				
 				refTag.on('value',function(snapshot){
 					var refChapterIndex = 0;
-					setCurrentVideoTagList(snapshot,function(){
-						$scope.chaptersInObject=[];
-						for( var i = 0 ; i < $scope.currentVideoTagList.length ; i++){
-							//do not add duplicate chapters
-						    var checkForDuplicate = function(object,str){
-								for(var j = 0 ; j < object.length ; j++){
-									if(object[j].name == str){
-										return false;
-									}
+					setCurrentVideoTagList(snapshot);
+					$scope.tagTypes=[];
+					for( var i = 0 ; i < $scope.currentVideoTagList.length ; i++){
+						//do not add duplicate chapters
+					    var checkForDuplicate = function(object,str){
+							for(var j = 0 ; j < object.length ; j++){
+								if(object[j].name == str){
+									return false;
 								}
-								return true;
 							}
-							if(!$scope.chaptersInObject.length || checkForDuplicate($scope.chaptersInObject,$scope.currentVideoTagList[i].chapter)){
-						    	$scope.chaptersInObject.push({name : $scope.currentVideoTagList[i].chapter, cl : "" + refChapterIndex});
-						    	refChapterIndex++;
-						    }	 
-
+							return true;
 						}
-						setMarkersForVideo();
-						});
+						if(!$scope.tagTypes.length || checkForDuplicate($scope.tagTypes,$scope.currentVideoTagList[i].chapter)){
+					    	$scope.tagTypes.push({name : $scope.currentVideoTagList[i].chapter, cl : "" + refChapterIndex});
+					    	//$scope.tagTypes[refChapterIndex].cl = "" + refChapterIndex;
+					    	refChapterIndex++;
+					    }	 
+
+					}
+					setMarkersForVideo();
+
 				});
 				
 			});		
 			
-		});
+		},1000);
+
 	}
-	//
-	function setCurrentVideoTagList(object,callback){
+
+
+	function setCurrentVideoTagList(object){
 		$scope.currentVideoTagList = [];
 		object.forEach(function(childSnapshot) {
 		    if(childSnapshot.val().link == $scope.urlLink){
@@ -59,7 +110,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		    
 		});
 		console.log('currentVideoTagList: ', $scope.currentVideoTagList);
-		callback();
 	}
 	
 
@@ -68,9 +118,9 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	    player.markers.removeAll();
 	    for( var i = 0 ; i < $scope.currentVideoTagList.length ; i++){
 	    	var object = $scope.currentVideoTagList[i];
-	    	for(var j = 0 ; j < $scope.chaptersInObject.length ; j++){
-				if(object.chapter == $scope.chaptersInObject[j].name){
-					var classColor = "color" + $scope.chaptersInObject[j].cl;
+	    	for(var j = 0 ; j < $scope.tagTypes.length ; j++){
+				if(object.chapter == $scope.tagTypes[j].name){
+					var classColor = "color" + $scope.tagTypes[j].cl;
 					break;
 				}
 			}
@@ -103,38 +153,40 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		});
 
 	};
-	
-	$scope.addTagButtonOnClick = function(){
-		$scope.selectedChapter = '';
-		$scope.tagname = '';
-		$scope.starttime = '';
-		$scope.endtime = '';
-		angular.element('#addTagModal').modal();
-		rangeSliderInitAndHideVideoControlBar(0,30,'edit-tag-slider-add','vidModal-add');
-
-		$('#addTagModal').on('hide.bs.modal', function (e) {
-		  // do something...
-		  var player = videojs('vidModal-add');		  
-		  player.player().pause();
-		  player.player().currentTime(1)
-		})
-
+			
+	$scope.addTagOnClick = function(){
+		var player = videojs('vid1');
+		$scope.addOptions = {
+			tagType : '',
+			tagname : '',
+			starttime : 0,
+			endtime : player.duration() * 0.3
+		};
+		rangeSliderInit();
+		showAddTagView = true;
+		$("#create-tag").css("display","initial")
 	}
-		
-	
-	$scope.addTag = function(chapter,tag,starttime,endtime,link,annotation){
-			//if($rootScope.user){
-				$scope.tag.$add({
+	function isExistantType(name){
+		for (var i = 0 ; i < $scope.tagTypes.length ; i++){
+			if( name == $scope.tagTypes[i].name){
+				return false;
+			}
+		}
+		return true;
+	}
+	$scope.addTag = function(tagType,tag,starttime,endtime,link,annotation){
+			if(isExistantType(tagType.name)){
+				$scope.addTagType(tagType.name);
+			}
+			var dataObj = {
 				link : link,
 				annotation : annotation,
-				chapter : chapter,
+				chapter : tagType.name,
 				tag : tag,
 				starttime : starttime,
 				endtime : endtime
-				});
-			// }else{
-			// 	console.log('Not logged in, cant write to database');
-			// }
+			}
+			$scope.tag.$add(dataObj);
 	}
 	$scope.removeTag = function(item,index){
 		//$scope.currentVideoTagList.$remove(item);
@@ -156,7 +208,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		console.log(item);
 		$scope.currentTagOnEdit = item;
 
-		$scope.selectedChapter = item.chapter;
+		$scope.tagType = item.chapter;
 		$scope.tagname = item.tag;
 		$scope.starttime = item.starttime;
 		$scope.endtime = item.endtime;
@@ -173,7 +225,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	$scope.updateTag = function(tagname,chapter){
 		refTag.on('child_added',function(snapshot){
 			$scope.tagname = tagname;
-			$scope.selectedChapter = chapter;
+			$scope.tagType = chapter;
 			
 			// console.log('item is : ', $scope.currentTagOnEdit);
 			// console.log('child added is: ', snapshot.val());
@@ -182,7 +234,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 				snapshot.ref().update({
 					link : $scope.urlLink,
 					annotation : 'annotation',
-					chapter : $scope.selectedChapter,
+					chapter : $scope.tagType,
 					tag : $scope.tagname,
 					starttime : $scope.starttime,
 					endtime : $scope.endtime
@@ -219,10 +271,11 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		document.getElementById('vid1').player.currentTime(goTotime);
 	}
 
-	$scope.addChapter = function(chapter){
+	$scope.addTagType = function(tagType){
 		//will push a chapter tempoparily until a user successfully creates a tag
 		//a temporary chapter is added for dropdown chapter visibility purposes
-		$scope.chaptersInObject.push({name : chapter});
+		//$scope.tagTypes.push({name : tagtype});
+		$scope.tagTypes.push(tagType);
 	};
 
 
@@ -258,15 +311,9 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		});
 		//player.markers.removeAll();
 	}
-	var setupSlider = function(){
-		// videojs("vid1").ready(function(){
-	 //    	var options ={hidden:false},
-		// 		mplayer=videojs("vid1");
-		// 		mplayer.rangeslider(options);
-		// });	
-	}
+
 	init();
-	setupSlider();
+
 
 	var refChapterIndex = 0;
 	
@@ -287,61 +334,39 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	//   document.getElementById('vid1').player.currentTime(time);
 	  
 	// });	
-
-	function rangeSliderInitAndHideVideoControlBar(sliderStart,sliderEnd,sliderId,playerModal){
-		
-
-
-		console.log('type: ', sliderStart);
-		var player = videojs(playerModal);
-		player.controlBar.hide();
-
-		var sliderStarttime,sliderEndtime;
-		if(!!sliderStart){
-			sliderStarttime = sliderStart;
-			sliderEndtime = sliderEnd;
-		}else{
-			sliderStarttime = 0;
-			sliderEndtime = 30;
-		}
-
-		
-		var html5Slider = document.getElementById(sliderId);
-		if(html5Slider.classList.length == 0){
-			noUiSlider.create(html5Slider, {
-				start: [ sliderStarttime, sliderEndtime ],
-				connect: true,
-				range: {
-					'min': 0,
-					'max': 100
-				}
-			});
-
-			// html5Slider.noUiSlider.set([sliderStarttime, sliderEndtime]);
-		}	
-		$scope.starttime = 0;
-		$scope.endtime = player.duration() * 0.3;
-
-		//update video with seek-bar
+	
+	function rangeSliderInit(){
+		var player = videojs('vid1');
+		var html5Slider = document.getElementById('slider');
+		noUiSlider.create(html5Slider, {
+			start: [ 0, 30 ],
+			connect: true,
+			range: {
+				'min': 0,
+				'max': 100
+			}
+		});
 		html5Slider.noUiSlider.on('update', function( values, handle ) {
 			var value = values[handle];
-			
-
+		
 			//right slider changed
 			if ( handle ) {
 				//inputNumber.value = value;
-				$scope.endtime = player.duration() * (value / 100);
+				$scope.addOptions.endtime = player.duration() * (value / 100);
 			} else {//left slider changed
-				$scope.starttime = player.duration() * (value / 100);;
+				$scope.addOptions.starttime = player.duration() * (value / 100);;
 				var time = player.duration() * (value / 100);
 				//select.value = Math.round(value);
+				
 				player.currentTime(time);
+
 
 			}
 			$timeout();
-			//$scope.$apply();
+
 		});	
 	}
+	
 	
 	
 

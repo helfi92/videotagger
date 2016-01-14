@@ -7,14 +7,13 @@
         <h4 class="modal-title" id="addTagLabel">Add a Tag</h4>
       </div>
       <div class="modal-body">
-        <div class="">
+        <!-- <div class="">
             <video  id="vidModal-add"  class="video-js vjs-default-skin" controls preload="auto" width="auto" height="100" data-setup='{ "techOrder": ["youtube"]}'>
 
               <source   src="//www.youtube.com/watch?v=iQ4LJSxf3JE&feature=youtu.be." type='video/youtube'  />
 
             </video>
             <div id="edit-tag-slider-add"></div>
-            <!-- angular.element(".vjs-control-bar").css("display","hidden") -->
 
         </div>
         <div>
@@ -27,7 +26,7 @@
           <table style="width:50%;margin-top:20px;border-collapse: separate;border-spacing: 0.5em;">
             <tr style="margin-bottom: 20px;">
               <td>Chapter:</td>
-              <td><select style="width:300px;display: -webkit-inline-box;"class="form-control" ng-model="selectedChapter">
+              <td><select style="width:300px;display: -webkit-inline-box;"class="form-control" ng-model="tagType">
               <option ng-repeat="item in chaptersInObject track by $index"  value="{{item.name}}">{{item.name}}</option>
             </select></td>
             </tr>
@@ -44,11 +43,11 @@
           </table>
 
 
-        </div>
+        </div> -->
         
       </div>
       <div style="width:100%"class="modal-footer">
-        <button ng-click="addTag(selectedChapter,tagname,starttime,endtime,urlLink,'Hey, this is my annotation')" type="button" class="btn btn-primary" data-dismiss="modal">Create</button>
+        <button ng-click="addTag(tagType,tagname,starttime,endtime,urlLink,'Hey, this is my annotation')" type="button" class="btn btn-primary" data-dismiss="modal">Create</button>
       </div>
     </div>
   </div>
@@ -84,7 +83,7 @@
           <table style="width:50%;margin-top:20px;border-collapse: separate;border-spacing: 0.5em;">
             <tr style="margin-bottom: 20px;">
               <td>Chapter:</td>
-              <td><select style="width:300px;display: -webkit-inline-box;"class="form-control" ng-model="selectedChapter">
+              <td><select style="width:300px;display: -webkit-inline-box;"class="form-control" ng-model="tagType">
               <option ng-repeat="item in chaptersInObject track by $index"  value="{{item.name}}">{{item.name}}</option>
             </select></td>
             </tr>
@@ -107,7 +106,7 @@
         
       </div>
       <div style="width:100%"class="modal-footer">
-        <button ng-click="updateTag(tagname,selectedChapter)" type="button" class="btn btn-primary" data-dismiss="modal">Update</button>
+        <button ng-click="updateTag(tagname,tagType)" type="button" class="btn btn-primary" data-dismiss="modal">Update</button>
       </div>
     </div>
   </div>
@@ -127,7 +126,7 @@
         
         <div>
           Chapter: 
-          <select class="form-control" ng-model="selectedChapter">
+          <select class="form-control" ng-model="tagType">
             <option ng-repeat="item in chaptersInObject track by $index"  value="{{item.name}}">{{item.name}}</option>
           </select>
         </div>

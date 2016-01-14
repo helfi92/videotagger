@@ -1,0 +1,31 @@
+<div style="height:100%;">
+  <div style="width:100%"><i class="fa fa-times pull-right"></i></div>
+  <div style="margin-bottom:25px;" class="">
+    <div id="slider"></div>
+  </div>
+  <div>
+    <table>
+      <tr><td><label style="margin-right:1em;">Start time:</label></td><td>{{millisecondsToFormattedTime(addOptions.starttime)}}</td></tr>
+      <tr><td><label style="margin-right:1em;">End time:</label></td><td>{{millisecondsToFormattedTime(addOptions.endtime)}}</td></tr>
+    </table>
+  </div>
+  <div>
+      <div style="margin-bottom:1em;" class="col-xs-12">
+        <div style="padding-right:0.5em;" class="col-xs-6">
+          <input style="padding: 6px 12px; height: 34px;width:100%;" placeholder="Tag name" style="width:300px;" ng-model="tagname">
+        </div>
+        <div style="padding-left:0.5em;" class="col-xs-6">
+          <ui-select allow-clear ng-model="tagType.selected" theme="bootstrap">
+            <ui-select-match placeholder="Select or search a tag type in the list...">{{$select.selected.name}}</ui-select-match>
+            <ui-select-choices repeat="item in tagTypes | filter: $select.search" refresh="refreshTagSearchResults($select)" refresh-delay="0">
+              <span ng-bind-html="trustAsHtml((item.name | highlight: $select.search))"></span>
+            </ui-select-choices>
+          </ui-select>
+        </div>
+        
+      </div>
+      <div class="col-xs-12" style="width:100%;">
+        <button ng-click="addTag(tagType.selected,tagname,addOptions.starttime,addOptions.endtime,urlLink,'Hey, this is my annotation')" type="button" class="btn btn-primary pull-right" data-dismiss="modal">Create</button>
+      </div>
+    </div>
+</div>

@@ -1,34 +1,7 @@
-<!-- LEFT PANEL -->
-<div style="margin-top: 80px;" class="col-xs-2">
-      <div class="col-xs-2" style="background-color:red;position: fixed;left:0;height:100%;">
-          <div style="position:relative;margin-top:30px;">
-            <!-- add tag -->
-            <button data-toggle="modal" ng-click="addTagButtonOnClick()"  class="left-panel-button">
-              <div style="display:inline-block;">
-                <img style="height:50px;"src="http://www.bespokeindustries.com/images/ribbon-tag.png">
-              </div>
-              <div style="display:inline-block;"><h5 style="color:white;">Add a Tag</h5></div>
-            </button>
 
-            <!-- filter by -->
-            <div style="margin-top:20px;margin-bottom:20px;">
-              <div style="display:inline-block;"><img style="height:50px;"src="http://icons.iconarchive.com/icons/icons8/ios7/256/Very-Basic-Filter-icon.png"></div><div style="display:inline-block;"><h5 style="color:white;">Filter by:</h5></div> 
-              <select class="form-control" ng-model="filterChapter">
-                <option ng-repeat="item in chaptersInObject track by $index" value="{{item.name}}">{{item.name}}</option>
-              </select>
-
-            </div>
-
-           
-          </div> 
-
-          
-
-      </div>
-</div>
 <!-- CONTENT -->
-<div style="" class="col-xs-10">
-  <div style="padding:8% 30% 10% 10%;z-index: 1;">
+<div style="" class="">
+  <div style="padding:8% 20% 10% 20%;z-index: 1;">
   	<!-- SEARCH BAR -->
   	   <div style="text-align:center;" class="input-group">
         <input ng-model="urlLink" type="text" class="form-control" placeholder="Enter URL...">
@@ -51,12 +24,32 @@
         
       
       
-     
+      <!--controls-->
+      <div style="position:relative;"class="">
+        <div style="padding-right:0.5em;" class="col-xs-6"><button ng-click="toggleTagsTable()" style="width:100%;margin-bottom:25px;" class="btn red">{{tagsTable.text}}</button></div>
+        <div style="padding-left:0.5em;" class="col-xs-6"><button ng-click="addTagOnClick();" style="width:100%;margin-bottom:25px;" class="btn red">+</button></div>
+      </div>
 
-
+      <!--create tag -->
+      <div id="create-tag" style="display:none;padding:0;margin-bottom:25px;background-color:rgba(128,0,0,0.3);padding:25px;" class="col-xs-12">
+        <div style="position:relative;"ng-include="'app/components/home/addTagModal.html'"></div>
+      </div>
       
-     <!-- video table -->
-      <table style="width:100%;text-align: center;border: 1px solid black;margin-top:20px;">
+      
+      <!--filter table-->
+      <div class="col-xs-12" style="margin-bottom:25px;">
+        <div class="col-xs-2">
+          <h5 style="">Filter by:</h5>
+        </span>
+        </div> 
+        <div class="col-xs-10">
+          <select class="form-control" ng-model="filterChapter">
+            <option ng-repeat="item in tagTypes track by $index" value="{{item.name}}">{{item.name}}</option>
+          </select>
+        </div> 
+      </div> 
+      <!-- video table -->
+      <table ng-show="tagsTable.visibility" class="table table-bordered table-striped table-background" style="width:100%;text-align: center;border: 1px solid black;margin-top:20px;">
         <tr><td>Tag Name</td><td>Start Time</td><td>End Time</td><td><!--column reserved for removing--></td><td><!--column reserved for edit--></td></tr>
         <tr ng-repeat="item in currentVideoTagList  | filter : {chapter : filterChapter} track by $index"><td ng-click="fastForwardTo(item.starttime)">{{item.tag}}</td><td>{{millisecondsToFormattedTime(item.starttime)}}</td><td>{{millisecondsToFormattedTime(item.endtime)}}</td>
           <td><i ng-click="removeTag(item,$index)" style="color:red;" class="fa fa-times fa-lg"></i></td><td><i ng-click="editTag(item,$index)" class="fa fa-pencil fa-lg"></i></td>
