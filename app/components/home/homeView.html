@@ -54,8 +54,6 @@
             <td>Tag Name</td>
             <td>Start Time</td>
             <td>End Time</td>
-            <td><!--column reserved for removing--></td>
-            <td><!--column reserved for edit--></td>
           </tr>
           <tr ng-repeat="item in currentVideoTagList  | filter : {chapter : filterChapter} track by $index">
             <td ng-click="fastForwardTo(item.starttime)">
@@ -72,7 +70,7 @@
               <input ng-show="item.editingEndtime" ng-model="newEndtime" ng-blur="doneEditing(item,newEndtime,3)" autofocus />
             </td>
             <td><i ng-click="removeTag(item,$index)" style="color:red;" class="fa fa-times fa-lg"></i></td>
-            <td><i ng-click="editTag(item,$index)" class="fa fa-pencil fa-lg"></i></td>
+            
           </tr>
         </table>
       </div>
