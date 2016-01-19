@@ -18,7 +18,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	
 	$scope.currentVideoTagList = [];
 	
-	
 	$scope.tagType = {};
   	$scope.tagTypes = [];
 
@@ -243,16 +242,15 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		$scope.tagname = item.tag;
 		$scope.starttime = item.starttime;
 		$scope.endtime = item.endtime;
+		$scope.annotation = item.annotation;
 		
-		//rangeSliderInitAndHideVideoControlBar(item.starttime,item.endtime,'edit-tag-slider-edit','vidModal-edit');
 	}
-	//start time and endtime not inputed in paramters because they are handled by the range slider function
 	$scope.updateTag = function(){
 		refTag.on('child_added',function(snapshot){
 			if(snapshot.val().link == $scope.currentTagOnEdit.link && snapshot.val().starttime == $scope.currentTagOnEdit.starttime && snapshot.val().endtime == $scope.currentTagOnEdit.endtime ){
 				snapshot.ref().update({
 					link : $scope.urlLink,
-					annotation : 'annotation',
+					annotation : $scope.annotation,
 					chapter : $scope.tagType,
 					tag : $scope.tagname,
 					starttime : $scope.starttime,
