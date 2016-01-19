@@ -33,7 +33,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
         //dong some background ajax calling for persistence...
         console.log('done editing: ',item);
         if(columnNumber == 1){
-			$scope.tagname = newVal;
+			//$scope.tagname = newVal;
+			$scope.chapter = newVal;
 			item.editingTag = false;
         }else if(columnNumber == 2){
         	$scope.starttime = newVal;
@@ -148,14 +149,16 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 				}
 			}
 			var time = object.starttime;
-			//var goTotime = stringToMilliseconds(time);
 			var goTotime = time;
-			var tagName = object.tag;
+			
+			//var tagName = object.tag;
+			var tagType = object.chapter;
 
 			var player = videojs('vid1');
 			player.markers.add([{ 
 				time: goTotime, 
-				text: tagName,
+				//text: tagName,
+				text : tagType,
 				class: "" + classColor
 			}]);
 
@@ -205,7 +208,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 				link : link,
 				annotation : annotation,
 				chapter : tagType.name,
-				tag : tag,
+				//tag : tag,
 				starttime : starttime,
 				endtime : endtime
 			}
@@ -251,8 +254,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 				snapshot.ref().update({
 					link : $scope.urlLink,
 					annotation : $scope.annotation,
-					chapter : $scope.tagType,
-					tag : $scope.tagname,
+					chapter : $scope.chapter,
+					//tag : $scope.tagname,
 					starttime : $scope.starttime,
 					endtime : $scope.endtime
 				});
@@ -293,7 +296,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		$scope.tagTypes.push(tagType);
 	};
 
-
 	var init = function(){
 		videojs('vid1', {
 
@@ -305,7 +307,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 	    });
 
-			var player = videojs('vid1');
+		var player = videojs('vid1');
 		
 		player.markers({
 		   	markerStyle: {
@@ -329,13 +331,9 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 	init();
 
-
 	var refChapterIndex = 0;
 	
 	setChapters();
-
-
-
 
 	//seek bar
 	// var seekBar = document.getElementById('seek-bar');
@@ -371,22 +369,12 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			} else {//left slider changed
 				$scope.addOptions.starttime = player.duration() * (value / 100);;
 				var time = player.duration() * (value / 100);
-				//select.value = Math.round(value);
-				
+				//select.value = Math.round(value);			
 				player.currentTime(time);
-
-
 			}
 			$timeout();
-
 		});	
 	}
-	
-	
-	
-
-
-	
 }]);
 
 

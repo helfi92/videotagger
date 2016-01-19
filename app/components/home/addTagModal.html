@@ -11,10 +11,10 @@
   </div>
   <div>
       <div style="margin-bottom:1em;" class="col-xs-12">
-        <div style="padding-right:0.5em;" class="col-xs-6">
+        <!-- <div style="padding-right:0.5em;" class="col-xs-6">
           <input style="padding: 6px 12px; height: 34px;width:100%;" placeholder="Tag name" style="width:300px;" ng-model="tagname">
-        </div>
-        <div style="padding-left:0.5em;" class="col-xs-6">
+        </div> -->
+        <div style="" class="col-xs-12">
           <ui-select allow-clear ng-model="tagType.selected" theme="bootstrap">
             <ui-select-match placeholder="Select or search a tag type in the list...">{{$select.selected.name}}</ui-select-match>
             <ui-select-choices repeat="item in tagTypes | filter: $select.search" refresh="refreshTagSearchResults($select)" refresh-delay="0">

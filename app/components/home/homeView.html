@@ -51,14 +51,14 @@
         <!-- video table -->
         <table  class="table table-bordered table-striped table-background" style="width:100%;text-align: center;border: 1px solid black;margin-top:20px;">
           <tr>
-            <td>Tag Name</td>
+            <td>Tag Type</td>
             <td>Start Time</td>
             <td>End Time</td>
           </tr>
           <tr ng-repeat="item in currentVideoTagList  | filter : {chapter : filterChapter} track by $index">
             <td ng-click="fastForwardTo(item.starttime)">
-              <span ng-hide="item.editingTag" ng-dblclick="editTag(item,1)">{{item.tag}}</span>
-              <input ng-show="item.editingTag" ng-model="newTagName" ng-blur="doneEditing(item,newTagName,1)" autofocus />             
+              <span ng-hide="item.editingTag" ng-dblclick="editTag(item,1)">{{item.chapter}}</span>
+              <input ng-show="item.editingTag" ng-model="newTagType" ng-blur="doneEditing(item,newTagType,1)" autofocus />             
             </td>
             <td>
               <span ng-hide="item.editingStarttime" ng-dblclick="editTag(item,2)">{{millisecondsToFormattedTime(item.starttime)}}</span>
