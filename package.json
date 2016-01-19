@@ -1,0 +1,28 @@
+{
+  "name": "videotagger",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "angular-ui-select": "^0.12.100",
+    "express": "^4.13.3",
+    "node-sass": "^3.3.3",
+    "video.js": "^4.12.15",
+    "videojs-ass": "^0.3.3",
+    "videojs-youtube": "^1.2.12"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/helfi92/videotagger.git"
+  },
+  "author": "Hassan Ali",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/helfi92/videotagger/issues"
+  },
+  "homepage": "https://github.com/helfi92/videotagger#readme"
+}
