@@ -301,7 +301,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 	        plugins: {
 	          ass: {
-	            'src': ["assets/css/testcaption.ass"]
+	            'src': ["assets/annotation/caption.ass"]
 	          }
 	        },
 
