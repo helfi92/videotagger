@@ -5,10 +5,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
   	var refTag = ref.child('tag');
 	var refChapters = ref.child('chapters');
 	
-
-
-
-	
 	$scope.urlLink = '//www.youtube.com/watch?v=iQ4LJSxf3JE&feature=youtu.be.';
   	$scope.tag = $firebaseArray(refTag);
 	$scope.tagTypes = [{
@@ -88,7 +84,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	}
 
 	
-	function setChapters(){
+	function setTagTypes(){
 	
 		$timeout(function(){
 			videojs("vid1").ready(function(){
@@ -114,16 +110,13 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 					    }	 
 
 					}
-					setMarkersForVideo();
-
+					setMarkersForVideo();					
 				});
 				
 			});		
 			
 		},1000);
-
 	}
-
 
 	function setCurrentVideoTagList(object){
 		$scope.currentVideoTagList = [];
@@ -136,7 +129,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		console.log('currentVideoTagList: ', $scope.currentVideoTagList);
 	}
 	
-
 	function setMarkersForVideo(){
 	    var player = videojs('vid1');
 	    player.markers.removeAll();
@@ -161,9 +153,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 				text : tagType,
 				class: "" + classColor
 			}]);
-
-	    }			    
-			
+	    }			    		
 	}	
 
 	$scope.goButtonClicked = function(url){
@@ -174,10 +164,9 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			
 			player.markers.removeAll();
 			
-			setChapters();
+			setTagTypes();
 			
 		});
-
 	};
 			
 	$scope.addTagOnClick = function(){
@@ -225,11 +214,10 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			console.log('child added is: ', snapshot.val());
 			if(snapshot.val().link == item.link && snapshot.val().starttime == item.starttime && snapshot.val().endtime == item.endtime ){
 				snapshot.ref().remove();
-				//$scope.tag.$remove(snapshot.ref().remove());
 			}
 		});
-
 	}
+	
 	$scope.editTag = function(item,columnNumber){
 		if(columnNumber == 1){
 			item.editingTag = true;
@@ -300,12 +288,15 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		videojs('vid1', {
 
 	        plugins: {
-	          ass: {
-	            'src': ["assets/annotation/caption.ass"]
-	          }
+	          // ass: {
+	          //   'src': ["assets/annotation/caption.ass"]
+	          // }
 	        },
 
 	    });
+
+		videojs('vid1').ass({ src: "assets/annotation/caption.ass" });
+
 
 		var player = videojs('vid1');
 		
@@ -333,7 +324,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 	var refChapterIndex = 0;
 	
-	setChapters();
+	setTagTypes();
 
 	//seek bar
 	// var seekBar = document.getElementById('seek-bar');
