@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "angular-ui-select": "^0.12.100",
+    "body-parser": "^1.14.2",
     "express": "^4.13.3",
     "node-sass": "^3.3.3",
     "video.js": "^4.12.15",

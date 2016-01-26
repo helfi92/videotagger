@@ -1,4 +1,4 @@
-app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','$timeout','$sce', function($scope,$rootScope,Auth,$firebaseArray,$timeout,$sce){
+app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','$timeout','$sce','$http', function($scope,$rootScope,Auth,$firebaseArray,$timeout,$sce,$http){
 
 
   	var ref = new Firebase("https://flickering-heat-6138.firebaseio.com");
@@ -201,6 +201,9 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 				starttime : starttime,
 				endtime : endtime
 			}
+
+			sendAnnotations(starttime,endtime,annotation);
+
 			$scope.tag.$add(dataObj);
 	}
 	$scope.removeTag = function(item,index){
@@ -284,6 +287,32 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		$scope.tagTypes.push(tagType);
 	};
 
+	function annatationsAdapter(obj){
+
+	}
+
+	function sendAnnotations(starttime,endtime,text){
+		var dataObj = {
+			starttime : starttime,
+			endtime : endtime,
+			text : text
+		};
+		console.log('startime: ', starttime);
+
+		dataObj.starttime = '00:08.00';
+		dataObj.endtime = '00:10.00';
+		dataObj.text = 'boom';
+
+		annatationsAdapter(dataObj);
+
+		$http.post('/annotations', dataObj).then(function(response){
+			console.log('post success:',response);
+		},function(err){
+			console.log('post error: ', err);
+		})
+	}
+
+
 	var init = function(){
 		videojs('vid1', {
 
@@ -318,9 +347,11 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		   
 		});
 		//player.markers.removeAll();
+		
 	}
 
 	init();
+
 
 	var refChapterIndex = 0;
 	
