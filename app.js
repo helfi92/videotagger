@@ -38,10 +38,23 @@ app.post('/annotations', function(req,res){
 	    }
 	});
 
-
-
 	res.end();
 })
+
+app.post('/initAnnotation',function(req,res){
+	console.log('annotations init: ', req.body);
+	console.log('sending: ', './generateAnnotation.sh');
+	child = exec('./generateAnnotation.sh', // command line argument directly in string
+	  function (error, stdout, stderr) {      // one easy function to capture data/errors
+	    console.log('stdout: ' + stdout);
+	    console.log('stderr: ' + stderr);
+	    if (error !== null) {
+	      console.log('exec error: ' + error);
+	    }
+	});
+
+	res.end();
+});
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
