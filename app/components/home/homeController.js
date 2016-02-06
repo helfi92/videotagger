@@ -30,19 +30,31 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
         console.log('done editing: ',item);
         if(columnNumber == 1){
 			//$scope.tagname = newVal;
-			$scope.chapter = newVal;
+			$scope.tagType = newVal;
 			item.editingTag = false;
         }else if(columnNumber == 2){
-        	$scope.starttime = newVal;
+        	$scope.starttime = timeAdapter(newVal);
         	item.editingStarttime = false;
         }else if(columnNumber == 3){
-        	$scope.endtime = newVal;
+        	$scope.endtime = timeAdapter(newVal);
         	item.editingEndtime = false;
         }
         //$scope.updateTag(item.tag,item.chapter);
         $scope.updateTag();
-
     };
+
+    function timeAdapter(str){
+    	//var str = "80:67";
+	    var splittedStr = str.split(":");
+
+	    var minutesFactor = Math.floor(parseInt(splittedStr[0]) / 60);
+	    var minutesRemainder = parseInt(splittedStr[0]) % 60;
+
+	    var result = ((minutesFactor * 3600) + (minutesRemainder * 60)) + parseInt(splittedStr[1]);
+	    return result;
+    }
+
+
 
 	$scope.toggleTagsTable = function(){
 		$scope.tagsTable.visibility = !$scope.tagsTable.visibility;
@@ -233,7 +245,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		$scope.currentTagOnEdit = item;
 
 		$scope.tagType = item.chapter;
-		$scope.tagname = item.tag;
+		//$scope.tagname = item.tag;
 		$scope.starttime = item.starttime;
 		$scope.endtime = item.endtime;
 		$scope.annotation = item.annotation;
@@ -245,7 +257,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 				snapshot.ref().update({
 					link : $scope.urlLink,
 					annotation : $scope.annotation,
-					chapter : $scope.chapter,
+					chapter : $scope.tagType,
 					//tag : $scope.tagname,
 					starttime : $scope.starttime,
 					endtime : $scope.endtime
@@ -287,8 +299,21 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		$scope.tagTypes.push(tagType);
 	};
 
-	function annatationsAdapter(obj){
+	function annotationsAdapter(str){
+		//var str = "80:67";	    
+	    var minutes = ""+ Math.floor(parseInt(str) / 60);
+	    var seconds = ""+ parseInt(str) % 60;
 
+
+	    if(minutes.length == 1){
+	    	minutes = "0" + minutes;
+	    }
+	    if(seconds.length == 1){
+	    	seconds = "0" + seconds;
+	    }
+
+	    var result =minutes + ":" + seconds + ".00" ;
+	    return result;
 	}
 
 	function sendAnnotations(starttime,endtime,text){
@@ -300,10 +325,12 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		console.log('startime: ', starttime);
 
 		dataObj.starttime = '00:08.00';
+		dataObj.starttime = annotationsAdapter(starttime);
 		dataObj.endtime = '00:10.00';
+		dataObj.endtime = annotationsAdapter(endtime);
 		dataObj.text = 'boom';
 
-		annatationsAdapter(dataObj);
+		annotationsAdapter(dataObj);
 
 		$http.post('/annotations', dataObj).then(function(response){
 			console.log('post success:',response);
