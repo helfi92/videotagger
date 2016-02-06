@@ -324,9 +324,9 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		};
 		console.log('startime: ', starttime);
 
-		dataObj.starttime = '00:08.00';
+		//dataObj.starttime = '00:08.00';
 		dataObj.starttime = annotationsAdapter(starttime);
-		dataObj.endtime = '00:10.00';
+		//dataObj.endtime = '00:10.00';
 		dataObj.endtime = annotationsAdapter(endtime);
 		dataObj.text = 'boom';
 
