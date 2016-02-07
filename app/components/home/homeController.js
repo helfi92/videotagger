@@ -122,7 +122,13 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 					    }	 
 
 					}
-					setMarkersForVideo();					
+					$http.post('/initAnnotation', {}).then(function(response){
+						console.log('post success:',response);
+						setMarkersForVideo();		
+					},function(err){
+						console.log('post error: ', err);
+					})
+
 				});
 				
 			});		
@@ -159,12 +165,14 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			var tagType = object.chapter;
 
 			var player = videojs('vid1');
+			
 			player.markers.add([{ 
 				time: goTotime, 
 				//text: tagName,
 				text : tagType,
 				class: "" + classColor
 			}]);
+			sendAnnotations(object.starttime,object.endtime,object.annotation);
 	    }			    		
 	}	
 
@@ -328,7 +336,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		dataObj.starttime = annotationsAdapter(starttime);
 		//dataObj.endtime = '00:10.00';
 		dataObj.endtime = annotationsAdapter(endtime);
-		dataObj.text = 'boom';
+		
+		dataObj.text = '"' + text + '"';
 
 		annotationsAdapter(dataObj);
 
@@ -374,6 +383,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		   
 		});
 		//player.markers.removeAll();
+
 		
 	}
 

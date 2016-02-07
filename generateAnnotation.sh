@@ -24,7 +24,7 @@ if [ $argsc = "4" ] ;
         echo -n "," >> $fileName
         echo -n $endTime >> $fileName
         echo -n ",Default,,0000,0000,0000,," >> $fileName
-        echo -n $annotation >> $fileName
+        echo $annotation >> $fileName
 
         echo "Values appended"
         exit $success

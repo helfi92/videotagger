@@ -16,5 +16,11 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
 Style: Default,Arial,25,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,2,1,2,10,10,10,1
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
-Dialogue: 0,00:08.00,00:10.00,Default,,0000,0000,0000,,boom
-Dialogue: 0,00:01.00,01:20.00,Default,,0000,0000,0000,,boom
+Dialogue: 0,00:00.00,00:14.00,Default,,0000,0000,0000,,aaaaaa
+Dialogue: 0,00:18.00,00:35.00,Default,,0000,0000,0000,,bbbbb
+Dialogue: 0,00:30.00Dialogue: 0,Dialogue: 0,Dialogue: 0,Dialogue: 0,Dialogue: 0,00:21.00,01:05.0000:00.0000:48.00,,00:00.00,01:20.00,Default,,0000,0000,0000,,01:20.00,01:20.00,Default,,0000,0000,0000,,ccccccc
+,Default,,0000,0000,0000,,01:20.00,Default,,0000,0000,0000,,helo
+hahah
+,Default,,0000,0000,0000,,helo
+00:17.00helo
+,00:27.00,Default,,0000,0000,0000,,hello from the other side
