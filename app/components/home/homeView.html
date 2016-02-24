@@ -13,15 +13,13 @@
       <!-- VIDEO -->
       <div style="padding-top:25px;padding-bottom: 25px;">
       	<video ng-model="link" id="vid1"  class="video-js vjs-default-skin" controls preload="auto" width="auto" height="400" data-setup='{ "techOrder": ["youtube"]}'>
-
           <source   src="//www.youtube.com/watch?v=iQ4LJSxf3JE&feature=youtu.be." type='video/youtube'  />
-
     		</video>
-
-        
-
       </div>
-        
+      
+      <div>
+        <div style="position:relative;" ng-include="'app/components/home/timeline.html'"></div>  
+      </div> 
       
       
       <!--controls-->

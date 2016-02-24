@@ -382,9 +382,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		   },
 		   
 		});
-		//player.markers.removeAll();
-
-		
+		//player.markers.removeAll();	
 	}
 
 	init();
@@ -393,19 +391,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	var refChapterIndex = 0;
 	
 	setTagTypes();
-
-	//seek bar
-	// var seekBar = document.getElementById('seek-bar');
-	// var player = videojs('vid1');
-	// seekBar.addEventListener("change", function() {
-	//   // Calculate the new time
-	//   console.log('seekBar value is: ', seekBar.value);
-	//   var time = player.duration() * (seekBar.value / 100);
-
-	//   // Update the video time
-	//   document.getElementById('vid1').player.currentTime(time);
-	  
-	// });	
 	
 	function rangeSliderInit(){
 		var player = videojs('vid1');
@@ -434,7 +419,251 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			$timeout();
 		});	
 	}
+
+
+	//timeline
+
+
+	var timelineObj = {
+		videoLength : 0,
+		width : 0
+	}
+
+	var tagTypes = ["fire","hello","boom"];
+	var timelinesArray = [];
+
+	var tagtypeTimelineRelation = {};
+
+	var markersArray = {markersArray : []};
+
+	for(var i = 0 ; i < 6 ; i++){
+		timelinesArray.push([i,markersArray]);		
+	}
+
+	function addMarkerToTimeline(marker){
+		
+		if(tagtypeTimelineRelation[marker.markertype]){
+			console.log(tagtypeTimelineRelation);
+			var index = tagtypeTimelineRelation[marker.markertype];
+			console.log('index: ', index);
+			//timelinesArray.push[[index,timelinesArray[index].markersArray.push(marker)]];
+			timelinesArray[index].markersArray.push(marker);
+			return true;
+			return tagtypeTimelineRelation[marker.markertype];
+		}
+
+		for(var i = 0 ; i < timelinesArray.length ; i++){
+			if(!!!timelinesArray[i][1].markersArray.length){	
+				timelinesArray[i][1].markersArray.push(marker);
+								
+				tagtypeTimelineRelation[marker.markertype] = i;
+				// tagtypeTimelineRelation.push()
+				return true;
+			}else{
+				if(!!timelinesArray[i][1].markersArray){
+					var flag = false;
+				
+
+				
+					for(var j = 0; j < timelinesArray[i][1].markersArray.length ; j++){
+						if(isOverlappingAnExistingMarker(marker,timelinesArray[i][1].markersArray[j])){
+							flag = true;
+							break;
+						}
+					
+					}
+					if(flag == false){
+						timelinesArray[i][1].markersArray.push(marker);
+						
+						tagtypeTimelineRelation[marker.markertype] = i;
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	
+
+	var relation = {};
+	for(var i = 0 ; i < tagTypes.length ; i++){
+		if(relation[tagTypes[i]]){
+				
+		}else{
+			console.log('not here');
+			relation[tagTypes[i]] = i;
+		}
+		
+	}
+
+	console.log('relation: ', relation);
+
+
+	function isOverlappingAnExistingMarker(markerSrc,existantMarker){
+		if((markerSrc.starttime <= existantMarker.starttime && markerSrc.endtime >= existantMarker.starttime) || (existantMarker.starttime <= markerSrc.starttime && existantMarker.endtime >= markerSrc.starttime) ){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+
+
+	//maker object
+	function Marker(starttime,endtime,markertype){
+		this.starttime = starttime;
+		this.endtime = endtime;
+		this.markertype = markertype;
+	}
+
+	var markerArray = [];
+	var colors = ["red","blue","green"];
+	function generateRandomTags(numberOfTags,videoLength,maxTagTypes){
+			
+
+			var markerOne,
+				markerTwo,
+				markerThree;
+
+			markerOne = new Marker(20,55,"1");
+			markerTwo = new Marker(45,70,"2");
+			markerThree = new Marker(200,210,"1");
+
+			
+			markerArray.push(markerOne);
+			markerArray.push(markerTwo);
+			markerArray.push(markerThree);
+
+
+		
+	}
+	function timeToPixel(time){
+		var conversion = ( time * timelineObj.width );
+		conversion /= timelineObj.videoLength;
+		return Math.floor(conversion);
+	}
+
+	function drawTagToTimeline(marker,timelineIndex){
+		$timeout(function(){
+			var c = document.getElementById("myCanvas");
+			var ctx = c.getContext("2d");
+			
+
+			var x1,
+				x2;
+			x1 = timeToPixel(marker.starttime);
+			x2 = timeToPixel(marker.endtime);
+
+			console.log('x1: %d x2: %d',x1,x2);
+			
+			var markerLength = marker.endtime - marker.starttime;
+
+			
+			var y = 20 + (timelineIndex * 30);
+
+			ctx.fillStyle = colors[2];
+
+			ctx.fillRect(x1,y, x2 - x1, 20);
+		
+			ctx.fillStyle = "green";
+
+
+
+
+		},2000);
+	}
+
+
+	function drawTimeline(){
+	$timeout(function(){
+
+		var c = document.getElementById("myCanvas");
+		var ctx = c.getContext("2d");
+		for(var i in markerArray){
+			var curr = markerArray[i];
+
+			drawTagToTimeline(curr,0);
+		}
+		ctx.fillStyle = "green";
+		ctx.fillRect(15,20, 107,20);
+
+
+		},2000);
+	}
+
+	const xTimelineOffset = 0;
+	function initTimeline(){
+		$timeout(function(){
+		var canvas = document.createElement("canvas");
+		canvas.id = "myCanvas";
+		
+		canvas.height = 210;
+		canvas.width = videojs('vid1').player().width();
+
+		canvas.style.cssText = "border:1px solid #d3d3d3;width:100%;";
+
+		document.getElementById("timeline").appendChild(canvas);
+
+		var ctx = canvas.getContext("2d");
+
+		//Compute timeline dimensions
+	 	const relativeTimelineSize = 1;
+	  	timelineObj.width = (canvas.width * relativeTimelineSize) - xTimelineOffset;
+	  	timelineObj.videoLength = videojs('vid1').player().duration();
+
+	  	//Compute text dimensions
+	  	const xTextOffset = canvas.width * (1.0 - relativeTimelineSize);
+
+	  	//Set text style
+	  	ctx.font="18px Arial";
+	  	// ctx.fillText("Timeline 1:", xTextOffset, 36);
+	  	// ctx.fillText("Timeline 2:", xTextOffset, 66);
+	  	// ctx.fillText("Timeline 3:" ,xTextOffset, 96);
+	  	// ctx.fillText("Timeline 4:", xTextOffset, 126);
+	  	// ctx.fillText("Timeline 5:", xTextOffset, 156);
+	  	// ctx.fillText("Timeline 6:", xTextOffset, 186);
+
+	  	//Timeline bars
+	  	ctx.fillStyle="#7d7a79";
+	  	ctx.fillRect(xTimelineOffset, 20, timelineObj.width, 20);
+	  	ctx.fillRect(xTimelineOffset, 50, timelineObj.width, 20);
+	  	ctx.fillRect(xTimelineOffset, 80, timelineObj.width, 20);
+	  	ctx.fillRect(xTimelineOffset, 110, timelineObj.width, 20);
+	  	ctx.fillRect(xTimelineOffset, 140, timelineObj.width, 20);
+	  	ctx.fillRect(xTimelineOffset, 170, timelineObj.width, 20);
+
+	  	console.log('width: ', timelineObj.width);
+	  	generateRandomTags(10,timelineObj.videoLength,4);
+	  	for(var i = 0 ; i < markerArray.length ; i++ ){
+	  		addMarkerToTimeline(markerArray[i]);
+	  	}
+	  	
+
+	  },2000);
+	}
+
+	
+
+	initTimeline();
+	
+	drawTimeline();
+
+
+	
+
+
+
+
+
+
+
+
 }]);
+
+
+
+
 
 
 /*
