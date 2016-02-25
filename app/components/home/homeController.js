@@ -23,8 +23,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	};
 
 
-
-
     $scope.doneEditing = function (item,newVal,columnNumber) {
         //dong some background ajax calling for persistence...
         console.log('done editing: ',item);
@@ -429,62 +427,98 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		width : 0
 	}
 
+	const TIMELINE_HEIGHT = 20; 
 	var tagTypes = ["fire","hello","boom"];
 	var timelinesArray = [];
-
-	var tagtypeTimelineRelation = {};
-
-	var markersArray = {markersArray : []};
+	var markerMap = {};
 
 	for(var i = 0 ; i < 6 ; i++){
+		var markersArray = {markersArray : []};
 		timelinesArray.push([i,markersArray]);		
 	}
 
-	function addMarkerToTimeline(marker){
-		
-		if(tagtypeTimelineRelation[marker.markertype]){
-			console.log(tagtypeTimelineRelation);
-			var index = tagtypeTimelineRelation[marker.markertype];
-			console.log('index: ', index);
-			//timelinesArray.push[[index,timelinesArray[index].markersArray.push(marker)]];
-			timelinesArray[index].markersArray.push(marker);
-			return true;
-			return tagtypeTimelineRelation[marker.markertype];
+	//maker object
+	function Marker(starttime,endtime,markertype){
+		this.starttime = starttime;
+		this.endtime = endtime;
+		this.markertype = markertype;
+	}
+
+	function addMarkerToTimeline(marker)
+	{	
+		var value = markerMap[marker.markertype.toString()];
+		if (!(value === undefined))
+		{
+			timelinesArray[value][1].markersArray.push(marker);
+			drawTagToTimeline(marker, value);
+
+			return;
 		}
 
-		for(var i = 0 ; i < timelinesArray.length ; i++){
-			if(!!!timelinesArray[i][1].markersArray.length){	
-				timelinesArray[i][1].markersArray.push(marker);
-								
-				tagtypeTimelineRelation[marker.markertype] = i;
-				// tagtypeTimelineRelation.push()
-				return true;
-			}else{
-				if(!!timelinesArray[i][1].markersArray){
-					var flag = false;
-				
+		for (var i = 0; i < timelinesArray.length; i++)
+		{
+			if (timelinesArray[i][1].markersArray.length == 0)
+			{
+				timelinesArray[i][1].markersArray.push(marker);					
+				markerMap[marker.markertype.toString()] = i;
+				drawTagToTimeline(marker, i);
 
-				
-					for(var j = 0; j < timelinesArray[i][1].markersArray.length ; j++){
-						if(isOverlappingAnExistingMarker(marker,timelinesArray[i][1].markersArray[j])){
-							flag = true;
-							break;
-						}
+				return;
+			}
+		}
+
+		for (var i = 0; i < timelinesArray.length; i++)
+		{
+			if (timelinesArray[i][1].markersArray.length == 0)
+			{	
+				timelinesArray[i][1].markersArray.push(marker);					
+				markerMap[marker.markertype.toString()] = i;
+				drawTagToTimeline(marker, i);
+			
+				return;
+			}
+			else
+			{
+				var tagOverlap = false;
+				for (var j = 0; j < timelinesArray[i][1].markersArray.length; j++)
+				{
+					if (isOverlappingAnExistingMarker(marker,timelinesArray[i][1].markersArray[j]))
+					{
+						tagOverlap = true;
+						break;
+					}
+				}
 					
-					}
-					if(flag == false){
-						timelinesArray[i][1].markersArray.push(marker);
-						
-						tagtypeTimelineRelation[marker.markertype] = i;
-						return true;
-					}
+				if (tagOverlap == false)
+				{
+					timelinesArray[i][1].markersArray.push(marker);			
+					markerMap[marker.markertype.toString()] = i;
+					drawTagToTimeline(marker, i);
+
+					return;
 				}
 			}
 		}
-		return false;
+
+		// The new marker overlaps in all timelines. Add it to the timeline that has less tags
+		var index = getTimelineIndexWithLessTags();
+		drawTagToTimeline(marker, index);
 	}
 	
-	
+	function getTimelineIndexWithLessTags()
+	{
+		var index = 0;
+		var numberOfTags = timelinesArray[index][1].markersArray.length;
+		for (var i = 1; i < timelinesArray.length; i++)
+		{
+			if (timelinesArray[i][1].markersArray.length < numberOfTags)
+			{
+				index = i;
+			}
+		}
+
+		return index;
+	}
 
 	var relation = {};
 	for(var i = 0 ; i < tagTypes.length ; i++){
@@ -497,9 +531,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		
 	}
 
-	console.log('relation: ', relation);
-
-
 	function isOverlappingAnExistingMarker(markerSrc,existantMarker){
 		if((markerSrc.starttime <= existantMarker.starttime && markerSrc.endtime >= existantMarker.starttime) || (existantMarker.starttime <= markerSrc.starttime && existantMarker.endtime >= markerSrc.starttime) ){
 			return true;
@@ -508,36 +539,30 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		}
 	}
 
-
-
-	//maker object
-	function Marker(starttime,endtime,markertype){
-		this.starttime = starttime;
-		this.endtime = endtime;
-		this.markertype = markertype;
-	}
-
 	var markerArray = [];
-	var colors = ["red","blue","green"];
-	function generateRandomTags(numberOfTags,videoLength,maxTagTypes){
-			
+	var colors = ["#8938bb","#42c6c3","#1d3bdc","#d63c97","#0e5c15","#253150","#6cc9f2","#9b8c59","#5599d7","#be96ac"];
+	function generateRandomTags(numberOfTags){
+		for (var i = 0; i < numberOfTags; i++)
+		{
+			var startTime = Math.floor(Math.random() * timelineObj.videoLength);
+			var length = Math.floor((Math.random() * 20) + 1);
+			var tagTypeIndex = Math.floor(Math.random() * 10);
 
-			var markerOne,
-				markerTwo,
-				markerThree;
+			if (startTime > 40)
+			{
+				startTime -= 25;
+			}
 
-			markerOne = new Marker(20,55,"1");
-			markerTwo = new Marker(45,70,"2");
-			markerThree = new Marker(200,210,"1");
+			if (tagTypeIndex == 10)
+			{
+				tagTypeIndex = 9;
+			}
 
-			
-			markerArray.push(markerOne);
-			markerArray.push(markerTwo);
-			markerArray.push(markerThree);
-
-
-		
+			marker = new Marker(startTime, startTime + length, "Tag" + tagTypeIndex);
+			markerArray.push(marker);
+		}
 	}
+
 	function timeToPixel(time){
 		var conversion = ( time * timelineObj.width );
 		conversion /= timelineObj.videoLength;
@@ -548,47 +573,91 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		$timeout(function(){
 			var c = document.getElementById("myCanvas");
 			var ctx = c.getContext("2d");
-			
-
-			var x1,
-				x2;
+			var x1 = 0;
+			var	x2 = 0;
 			x1 = timeToPixel(marker.starttime);
 			x2 = timeToPixel(marker.endtime);
-
-			console.log('x1: %d x2: %d',x1,x2);
 			
 			var markerLength = marker.endtime - marker.starttime;
-
-			
 			var y = 20 + (timelineIndex * 30);
 
-			ctx.fillStyle = colors[2];
+			// -------------------------------- DEBUG only. Delete me ------------------------------
+			var colorIndex = marker.markertype.slice(-1);
+			// -------------------------------------------------------------------------------------
 
+			ctx.fillStyle = colors[colorIndex];
 			ctx.fillRect(x1,y, x2 - x1, 20);
-		
 			ctx.fillStyle = "green";
-
-
-
-
 		},2000);
 	}
 
+	function getClickedTimelineIndex(y)
+	{
+		for (var i = 0; i < timelinesArray.length; i++)
+		{
+			var timelineYCoordinate = TIMELINE_HEIGHT + (i * 30);
 
-	function drawTimeline(){
-	$timeout(function(){
-
-		var c = document.getElementById("myCanvas");
-		var ctx = c.getContext("2d");
-		for(var i in markerArray){
-			var curr = markerArray[i];
-
-			drawTagToTimeline(curr,0);
+			if (timelineYCoordinate <= y && (timelineYCoordinate + TIMELINE_HEIGHT) >= y)
+			{
+				return i;
+			}
 		}
-		ctx.fillStyle = "green";
-		ctx.fillRect(15,20, 107,20);
 
+		return -1;
+	}
 
+	function getTimeFromPixels(x)
+	{
+		var conversion = x * timelineObj.videoLength;
+		conversion /= timelineObj.width;
+		return Math.floor(conversion);
+	}
+
+	function getTagStartTimeAt(time, timelineIndex)
+	{
+		for (var i = 0; i < timelinesArray[timelineIndex][1].markersArray.length; i++)
+		{
+			var marker = timelinesArray[timelineIndex][1].markersArray[i];
+
+			if (marker.starttime <= time && marker.endtime >= time)
+			{
+				//return marker.starttime;
+				// return the marker for now to debug.
+				return marker;
+			}
+		}
+
+		return -1;
+	}
+
+	function canvasOnClick(evt, canvasBoundingRect) 
+	{
+		$timeout(function(){
+			var c = document.getElementById("myCanvas");
+			var rect = c.getBoundingClientRect();
+
+			var x = evt.clientX - rect.left
+			var y = evt.clientY - rect.top
+
+			var index = getClickedTimelineIndex(y);
+
+			if (index != -1)
+			{
+				var time = getTimeFromPixels(x);
+				var markerStartTime = getTagStartTimeAt(time, index);
+
+				// -------------------------------- DEBUG only. Delete me ------------------------------
+				var debugCanvas = document.getElementById("debugCanvas");
+				var debugContext = debugCanvas.getContext('2d');
+				debugContext.clearRect(0, 0, debugCanvas.width, debugCanvas.height);
+				debugContext.font = '14px Arial';
+			 	debugContext.fillStyle = 'black';
+				debugContext.fillText("Marker Start Time: " + markerStartTime.starttime.toString(), 20, 10);
+				debugContext.fillText("Marker end Time: " + markerStartTime.endtime.toString(), 20, 40);
+				debugContext.fillText("Marker type: " + markerStartTime.markertype.toString(), 20, 70);
+				// -------------------------------------------------------------------------------------
+			}
+			
 		},2000);
 	}
 
@@ -601,73 +670,56 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		canvas.height = 210;
 		canvas.width = videojs('vid1').player().width();
 
-		canvas.style.cssText = "border:1px solid #d3d3d3;width:100%;";
+		canvas.style.cssText = "border:1px solid #d3d3d3;";
 
 		document.getElementById("timeline").appendChild(canvas);
 
+		// -------------------------------- DEBUG only. Delete me ------------------------------
+		var debugCanvas = document.createElement("canvas");
+		debugCanvas.id = "debugCanvas";
+		debugCanvas.height = 100;
+		debugCanvas.width = 300;
+		debugCanvas.style.cssText = "border:1px solid #d3d3d3;width:100%;";
+		document.getElementById("timeline").appendChild(debugCanvas);
+		// -------------------------------------------------------------------------------------
+
 		var ctx = canvas.getContext("2d");
+
+		// Set listener
+		canvas.addEventListener('mousedown', function(evt) { canvasOnClick(evt, canvas.getBoundingClientRect()); }, false);
 
 		//Compute timeline dimensions
 	 	const relativeTimelineSize = 1;
 	  	timelineObj.width = (canvas.width * relativeTimelineSize) - xTimelineOffset;
-	  	timelineObj.videoLength = videojs('vid1').player().duration();
+	  	
+	  	// Not working!
+	  	//timelineObj.videoLength = videojs('vid1').player().duration();
+	  	timelineObj.videoLength = 266;
 
 	  	//Compute text dimensions
 	  	const xTextOffset = canvas.width * (1.0 - relativeTimelineSize);
 
-	  	//Set text style
-	  	ctx.font="18px Arial";
-	  	// ctx.fillText("Timeline 1:", xTextOffset, 36);
-	  	// ctx.fillText("Timeline 2:", xTextOffset, 66);
-	  	// ctx.fillText("Timeline 3:" ,xTextOffset, 96);
-	  	// ctx.fillText("Timeline 4:", xTextOffset, 126);
-	  	// ctx.fillText("Timeline 5:", xTextOffset, 156);
-	  	// ctx.fillText("Timeline 6:", xTextOffset, 186);
-
 	  	//Timeline bars
 	  	ctx.fillStyle="#7d7a79";
-	  	ctx.fillRect(xTimelineOffset, 20, timelineObj.width, 20);
-	  	ctx.fillRect(xTimelineOffset, 50, timelineObj.width, 20);
-	  	ctx.fillRect(xTimelineOffset, 80, timelineObj.width, 20);
-	  	ctx.fillRect(xTimelineOffset, 110, timelineObj.width, 20);
-	  	ctx.fillRect(xTimelineOffset, 140, timelineObj.width, 20);
-	  	ctx.fillRect(xTimelineOffset, 170, timelineObj.width, 20);
+	  	ctx.fillRect(xTimelineOffset, 20, timelineObj.width, TIMELINE_HEIGHT);
+	  	ctx.fillRect(xTimelineOffset, 50, timelineObj.width, TIMELINE_HEIGHT);
+	  	ctx.fillRect(xTimelineOffset, 80, timelineObj.width, TIMELINE_HEIGHT);
+	  	ctx.fillRect(xTimelineOffset, 110, timelineObj.width, TIMELINE_HEIGHT);
+	  	ctx.fillRect(xTimelineOffset, 140, timelineObj.width, TIMELINE_HEIGHT);
+	  	ctx.fillRect(xTimelineOffset, 170, timelineObj.width, TIMELINE_HEIGHT);
 
 	  	console.log('width: ', timelineObj.width);
-	  	generateRandomTags(10,timelineObj.videoLength,4);
-	  	for(var i = 0 ; i < markerArray.length ; i++ ){
+	  	generateRandomTags(20);
+	  	for(var i = 0 ; i < markerArray.length ; i++ )
+	  	{
 	  		addMarkerToTimeline(markerArray[i]);
 	  	}
-	  	
-
 	  },2000);
 	}
 
 	
 
 	initTimeline();
-	
-	drawTimeline();
-
-
-	
-
-
-
-
-
-
-
 
 }]);
 
-
-
-
-
-
-/*
-*
-*
-*
-*/
