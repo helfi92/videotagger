@@ -37,7 +37,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
         	$scope.endtime = timeAdapter(newVal);
         	item.editingEndtime = false;
         }
-        //$scope.updateTag(item.tag,item.chapter);
         $scope.updateTag();
     };
 
@@ -130,8 +129,10 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 				});
 				
 			});		
+		
+			initTimeline();
 			
-		},1000);
+		},1500);
 	}
 
 	function setCurrentVideoTagList(object){
@@ -386,6 +387,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		   
 		});
 		//player.markers.removeAll();	
+
 	}
 
 	init();
@@ -593,43 +595,41 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	}
 
 	function drawTagToTimeline(marker,timelineIndex){
-		$timeout(function(){
-			var c = document.getElementById("myCanvas");
-			var ctx = c.getContext("2d");
-			var x1 = 0;
-			var	x2 = 0;
-			x1 = timeToPixel(marker.starttime);
-			x2 = timeToPixel(marker.endtime);
-			
-			var markerLength = marker.endtime - marker.starttime;
-			var y = 20 + (timelineIndex * 30);
+		var c = document.getElementById("myCanvas");
+		var ctx = c.getContext("2d");
+		var x1 = 0;
+		var	x2 = 0;
+		x1 = timeToPixel(marker.starttime);
+		x2 = timeToPixel(marker.endtime);
+		
+		var markerLength = marker.endtime - marker.starttime;
+		var y = 20 + (timelineIndex * 30);
 
-			// -------------------------------- DEBUG only. Delete me ------------------------------
-			var color = 0;
-			// -------------------------------------------------------------------------------------
+		// -------------------------------- DEBUG only. Delete me ------------------------------
+		var color = 0;
+		// -------------------------------------------------------------------------------------
 
-			//find index in 
-			var colorIndex = 0;
-			for(var i  = 0 ; i < $scope.tagTypes.length ; i++){
-				if(marker.chapter == $scope.tagTypes[i].name){
-					colorIndex = $scope.tagTypes[i].cl;
-					color = "color"+colorIndex;
-					break;
-				}
+		//find index in 
+		var colorIndex = 0;
+		for(var i  = 0 ; i < $scope.tagTypes.length ; i++){
+			if(marker.chapter == $scope.tagTypes[i].name){
+				colorIndex = $scope.tagTypes[i].cl;
+				color = "color"+colorIndex;
+				break;
 			}
-			//ctx.fillStyle = colors[colorIndex];
-			var colorClass = "";
-			for(var i = 0; i < document.styleSheets.length ; i++){
-				if(!!document.styleSheets[i].href && (document.styleSheets[i].href).indexOf("colors.css") > -1){					
-					colorClass = document.styleSheets[i].rules || document.styleSheets[i].cssRules;
-					break;
-				}
+		}
+		//ctx.fillStyle = colors[colorIndex];
+		var colorClass = "";
+		for(var i = 0; i < document.styleSheets.length ; i++){
+			if(!!document.styleSheets[i].href && (document.styleSheets[i].href).indexOf("colors.css") > -1){					
+				colorClass = document.styleSheets[i].rules || document.styleSheets[i].cssRules;
+				break;
 			}
+		}
 
-			ctx.fillStyle = colorClass[colorIndex].style.backgroundColor;
-			ctx.fillRect(x1,y, x2 - x1, 20);
-			ctx.fillStyle = "green";
-		},2000);
+		ctx.fillStyle = colorClass[colorIndex].style.backgroundColor;
+		ctx.fillRect(x1,y, x2 - x1, 20);
+		ctx.fillStyle = "green";
 	}
 
 	function getClickedTimelineIndex(y)
@@ -693,7 +693,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 	const xTimelineOffset = 0;
 	function initTimeline(){
-		$timeout(function(){
 		var canvas = document.createElement("canvas");
 		canvas.id = "myCanvas";
 		
@@ -732,16 +731,10 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 	  	console.log('width: ', timelineObj.width);
 	  	generateRandomTags(20);
-	  	for(var i = 0 ; i < markerArray.length ; i++ )
-	  	{
+	  	for(var i = 0 ; i < markerArray.length ; i++ ){
 	  		addMarkerToTimeline(markerArray[i]);
 	  	}
-	  },2000);
 	}
-
-	
-
-	initTimeline();
 
 }]);
 
