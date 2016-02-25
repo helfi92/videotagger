@@ -222,8 +222,12 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			$scope.tag.$add(dataObj);
 
 			addMarkerToTimeline(dataObj);
-			document.getElementById("create-tag").style.display = "none";
+			$scope.hideAddTag();
 	}
+
+	$scope.hideAddTag = function(){
+		document.getElementById("create-tag").style.display = "none";
+	};
 
 	$scope.removeTag = function(item,index){
 		//$scope.currentVideoTagList.$remove(item);
