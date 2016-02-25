@@ -223,6 +223,9 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			sendAnnotations(starttime,endtime,annotation);
 
 			$scope.tag.$add(dataObj);
+
+			addMarkerToTimeline(dataObj);
+			document.getElementById("create-tag").style.display = "none";
 	}
 	$scope.removeTag = function(item,index){
 		//$scope.currentVideoTagList.$remove(item);
@@ -304,6 +307,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		//$scope.tagTypes.push({name : tagtype});
 		$scope.tagTypes.push(tagType);
 	};
+
+
 
 	function annotationsAdapter(str){
 		//var str = "80:67";	    
@@ -393,6 +398,11 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	function rangeSliderInit(){
 		var player = videojs('vid1');
 		var html5Slider = document.getElementById('slider');
+		
+		if(!!html5Slider.childElementCount){
+			return;
+		}
+
 		noUiSlider.create(html5Slider, {
 			start: [ 0, 30 ],
 			connect: true,
@@ -540,7 +550,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	}
 
 	var markerArray = [];
-	var colors = ["#8938bb","#42c6c3","#1d3bdc","#d63c97","#0e5c15","#253150","#6cc9f2","#9b8c59","#5599d7","#be96ac"];
 	function generateRandomTags(numberOfTags){
 		for (var i = 0; i < numberOfTags; i++){
 			var startTime = Math.floor(Math.random() * timelineObj.videoLength);
@@ -570,8 +579,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			}
 
 			//$scope.addTag(marker.chapter,marker.starttime,marker.endtime,marker.link,marker.annotation);
-
-
 
 			markerArray.push(marker);
 
@@ -610,9 +617,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 					break;
 				}
 			}
-
 			//ctx.fillStyle = colors[colorIndex];
-			
 			var colorClass = "";
 			for(var i = 0; i < document.styleSheets.length ; i++){
 				if(!!document.styleSheets[i].href && (document.styleSheets[i].href).indexOf("colors.css") > -1){					
@@ -682,17 +687,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			var player = videojs('vid1');
 			player.player().currentTime(markerObj.starttime);
 
-
-			// -------------------------------- DEBUG only. Delete me ------------------------------
-			var debugCanvas = document.getElementById("debugCanvas");
-			var debugContext = debugCanvas.getContext('2d');
-			debugContext.clearRect(0, 0, debugCanvas.width, debugCanvas.height);
-			debugContext.font = '14px Arial';
-		 	debugContext.fillStyle = 'black';
-			debugContext.fillText("Marker Start Time: " + markerObj.starttime.toString(), 20, 10);
-			debugContext.fillText("Marker end Time: " + markerObj.endtime.toString(), 20, 40);
-			debugContext.fillText("Marker type: " + markerObj.chapter.toString(), 20, 70);
-			// -------------------------------------------------------------------------------------
 		}
 			
 	}
@@ -710,14 +704,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 		document.getElementById("timeline").appendChild(canvas);
 
-		// -------------------------------- DEBUG only. Delete me ------------------------------
-		var debugCanvas = document.createElement("canvas");
-		debugCanvas.id = "debugCanvas";
-		debugCanvas.height = 100;
-		debugCanvas.width = 300;
-		debugCanvas.style.cssText = "border:1px solid #d3d3d3;width:100%;";
-		document.getElementById("timeline").appendChild(debugCanvas);
-		// -------------------------------------------------------------------------------------
 
 		var ctx = canvas.getContext("2d");
 
@@ -729,8 +715,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	  	timelineObj.width = (canvas.width * relativeTimelineSize) - xTimelineOffset;
 	  	
 	  	// Not working!
-	  	//timelineObj.videoLength = videojs('vid1').player().duration();
-	  	timelineObj.videoLength = 266;
+	  	timelineObj.videoLength = videojs('vid1').player().duration();
+	  	//timelineObj.videoLength = 266;
 
 	  	//Compute text dimensions
 	  	const xTextOffset = canvas.width * (1.0 - relativeTimelineSize);
