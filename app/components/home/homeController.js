@@ -695,8 +695,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		
 		canvas.height = 210;
 		canvas.width = videojs('vid1').player().width();
-
-		canvas.style.cssText = "border:1px solid #d3d3d3;";
+		canvas.style.cssText = "border:1px solid #d3d3d3;width:100%;";
 
 		document.getElementById("timeline").appendChild(canvas);
 
