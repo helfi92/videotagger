@@ -1,6 +1,5 @@
 app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','$timeout','$sce','$http', function($scope,$rootScope,Auth,$firebaseArray,$timeout,$sce,$http){
 
-
   	var ref = new Firebase("https://flickering-heat-6138.firebaseio.com");
   	var refTag = ref.child('tag');
 	var refChapters = ref.child('chapters');
@@ -21,7 +20,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		text : "Show Table",
 		visibility : false,
 	};
-
 
     $scope.doneEditing = function (item,newVal,columnNumber) {
         //dong some background ajax calling for persistence...
@@ -51,8 +49,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	    return result;
     }
 
-
-
 	$scope.toggleTagsTable = function(){
 		$scope.tagsTable.visibility = !$scope.tagsTable.visibility;
 		if($scope.tagsTable.visibility == true){
@@ -65,7 +61,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
   	$scope.trustAsHtml = function(value) {
 	  return $sce.trustAsHtml(value);
 	};
-
 
 	$scope.refreshTagSearchResults = function($select){
 	 var search = $select.search,
@@ -91,7 +86,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	   $select.selected = userInputItem;
 	 }
 	}
-
 	
 	function setTagTypes(){
 	
@@ -200,6 +194,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		showAddTagView = true;
 		$("#create-tag").css("display","initial")
 	}
+
 	function isExistantType(name){
 		for (var i = 0 ; i < $scope.tagTypes.length ; i++){
 			if( name == $scope.tagTypes[i].name){
@@ -208,6 +203,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		}
 		return true;
 	}
+
 	$scope.addTag = function(tagType,starttime,endtime,link,annotation){
 			if(isExistantType(tagType.name)){
 				$scope.addTagType(tagType.name);
@@ -228,6 +224,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			addMarkerToTimeline(dataObj);
 			document.getElementById("create-tag").style.display = "none";
 	}
+
 	$scope.removeTag = function(item,index){
 		//$scope.currentVideoTagList.$remove(item);
 		$scope.currentVideoTagList.splice(index,1);
@@ -261,6 +258,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		$scope.annotation = item.annotation;
 		
 	}
+
 	$scope.updateTag = function(){
 		refTag.on('child_added',function(snapshot){
 			if(snapshot.val().link == $scope.currentTagOnEdit.link && snapshot.val().starttime == $scope.currentTagOnEdit.starttime && snapshot.val().endtime == $scope.currentTagOnEdit.endtime ){
@@ -276,7 +274,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		});			
 	}
 
-
 	function stringToMilliseconds (time){
 		
 		var strTimeArray = time.split(":");
@@ -287,7 +284,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		var goTotime = seconds + ms;
 		return goTotime;
 	}
-	 $scope.millisecondsToFormattedTime = function(milli){
+
+	$scope.millisecondsToFormattedTime = function(milli){
 		var time = new Date(milli * 1000);
 		var minutes = time.getMinutes();
 		var seconds = ("0"+time.getSeconds()).slice(-2);
@@ -558,13 +556,11 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			var length = Math.floor((Math.random() * 20) + 1);
 			var tagTypeIndex = Math.floor(Math.random() * 10);
 
-			if (startTime > 40)
-			{
+			if (startTime > 40){
 				startTime -= 25;
 			}
 
-			if (tagTypeIndex == 10)
-			{
+			if (tagTypeIndex == 10){
 				tagTypeIndex = 9;
 			}
 
@@ -632,8 +628,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		ctx.fillStyle = "green";
 	}
 
-	function getClickedTimelineIndex(y)
-	{
+	function getClickedTimelineIndex(y){
 		for (var i = 0; i < timelinesArray.length; i++)
 		{
 			var timelineYCoordinate = TIMELINE_HEIGHT + (i * 30);
@@ -647,15 +642,13 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		return -1;
 	}
 
-	function getTimeFromPixels(x)
-	{
+	function getTimeFromPixels(x){
 		var conversion = x * timelineObj.videoLength;
 		conversion /= timelineObj.width;
 		return Math.floor(conversion);
 	}
 
-	function getMarker(time, timelineIndex)
-	{
+	function getMarker(time, timelineIndex){
 		for (var i = 0; i < timelinesArray[timelineIndex][1].markersArray.length; i++)
 		{
 			var marker = timelinesArray[timelineIndex][1].markersArray[i];
