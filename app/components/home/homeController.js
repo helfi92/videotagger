@@ -207,7 +207,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		}
 		return true;
 	}
-	$scope.addTag = function(tagType,tag,starttime,endtime,link,annotation){
+	$scope.addTag = function(tagType,starttime,endtime,link,annotation){
 			if(isExistantType(tagType.name)){
 				$scope.addTagType(tagType.name);
 			}
@@ -441,12 +441,12 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	function Marker(starttime,endtime,markertype){
 		this.starttime = starttime;
 		this.endtime = endtime;
-		this.markertype = markertype;
+		this.chapter = markertype;
 	}
 
 	function addMarkerToTimeline(marker)
 	{	
-		var value = markerMap[marker.markertype.toString()];
+		var value = markerMap[marker.chapter.toString()];
 		if (!(value === undefined))
 		{
 			timelinesArray[value][1].markersArray.push(marker);
@@ -460,7 +460,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			if (timelinesArray[i][1].markersArray.length == 0)
 			{
 				timelinesArray[i][1].markersArray.push(marker);					
-				markerMap[marker.markertype.toString()] = i;
+				markerMap[marker.chapter.toString()] = i;
 				drawTagToTimeline(marker, i);
 
 				return;
@@ -472,7 +472,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			if (timelinesArray[i][1].markersArray.length == 0)
 			{	
 				timelinesArray[i][1].markersArray.push(marker);					
-				markerMap[marker.markertype.toString()] = i;
+				markerMap[marker.chapter.toString()] = i;
 				drawTagToTimeline(marker, i);
 			
 				return;
@@ -492,7 +492,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 				if (tagOverlap == false)
 				{
 					timelinesArray[i][1].markersArray.push(marker);			
-					markerMap[marker.markertype.toString()] = i;
+					markerMap[marker.chapter.toString()] = i;
 					drawTagToTimeline(marker, i);
 
 					return;
@@ -542,8 +542,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	var markerArray = [];
 	var colors = ["#8938bb","#42c6c3","#1d3bdc","#d63c97","#0e5c15","#253150","#6cc9f2","#9b8c59","#5599d7","#be96ac"];
 	function generateRandomTags(numberOfTags){
-		for (var i = 0; i < numberOfTags; i++)
-		{
+		for (var i = 0; i < numberOfTags; i++){
 			var startTime = Math.floor(Math.random() * timelineObj.videoLength);
 			var length = Math.floor((Math.random() * 20) + 1);
 			var tagTypeIndex = Math.floor(Math.random() * 10);
@@ -558,9 +557,26 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 				tagTypeIndex = 9;
 			}
 
-			marker = new Marker(startTime, startTime + length, "Tag" + tagTypeIndex);
+			//marker = new Marker(startTime, startTime + length, "Tag" + tagTypeIndex);
+
+			marker = {
+				annotation : 'bot',
+				chapter : {
+					name : "Tag" + tagTypeIndex
+				},
+				endtime : startTime + length,
+				link : $scope.urlLink,
+				starttime : startTime
+			}
+
+			//$scope.addTag(marker.chapter,marker.starttime,marker.endtime,marker.link,marker.annotation);
+
+
+
 			markerArray.push(marker);
+
 		}
+		markerArray = $scope.currentVideoTagList;
 	}
 
 	function timeToPixel(time){
@@ -582,7 +598,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			var y = 20 + (timelineIndex * 30);
 
 			// -------------------------------- DEBUG only. Delete me ------------------------------
-			var colorIndex = marker.markertype.slice(-1);
+			var colorIndex = 0;
 			// -------------------------------------------------------------------------------------
 
 			ctx.fillStyle = colors[colorIndex];
@@ -630,39 +646,35 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		return -1;
 	}
 
-	function canvasOnClick(evt, canvasBoundingRect) 
-	{
-		$timeout(function(){
-			var c = document.getElementById("myCanvas");
-			var rect = c.getBoundingClientRect();
+	function canvasOnClick(evt, canvasBoundingRect){
+		var c = document.getElementById("myCanvas");
+		var rect = c.getBoundingClientRect();
 
-			var x = evt.clientX - rect.left
-			var y = evt.clientY - rect.top
+		var x = evt.clientX - rect.left
+		var y = evt.clientY - rect.top
 
-			var index = getClickedTimelineIndex(y);
+		var index = getClickedTimelineIndex(y);
 
-			if (index != -1)
-			{
-				var time = getTimeFromPixels(x);
-				var markerObj = getMarker(time, index);
+		if (index != -1){
+			var time = getTimeFromPixels(x);
+			var markerObj = getMarker(time, index);
 
-				var player = videojs('vid1');
-				player.player().currentTime(markerObj.starttime);
+			var player = videojs('vid1');
+			player.player().currentTime(markerObj.starttime);
 
 
-				// -------------------------------- DEBUG only. Delete me ------------------------------
-				var debugCanvas = document.getElementById("debugCanvas");
-				var debugContext = debugCanvas.getContext('2d');
-				debugContext.clearRect(0, 0, debugCanvas.width, debugCanvas.height);
-				debugContext.font = '14px Arial';
-			 	debugContext.fillStyle = 'black';
-				debugContext.fillText("Marker Start Time: " + markerObj.starttime.toString(), 20, 10);
-				debugContext.fillText("Marker end Time: " + markerObj.endtime.toString(), 20, 40);
-				debugContext.fillText("Marker type: " + markerObj.markertype.toString(), 20, 70);
-				// -------------------------------------------------------------------------------------
-			}
+			// -------------------------------- DEBUG only. Delete me ------------------------------
+			var debugCanvas = document.getElementById("debugCanvas");
+			var debugContext = debugCanvas.getContext('2d');
+			debugContext.clearRect(0, 0, debugCanvas.width, debugCanvas.height);
+			debugContext.font = '14px Arial';
+		 	debugContext.fillStyle = 'black';
+			debugContext.fillText("Marker Start Time: " + markerObj.starttime.toString(), 20, 10);
+			debugContext.fillText("Marker end Time: " + markerObj.endtime.toString(), 20, 40);
+			debugContext.fillText("Marker type: " + markerObj.chapter.toString(), 20, 70);
+			// -------------------------------------------------------------------------------------
+		}
 			
-		},2000);
 	}
 
 	const xTimelineOffset = 0;
