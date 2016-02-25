@@ -16,11 +16,24 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
 Style: Default,Arial,25,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,2,1,2,10,10,10,1
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
-Dialogue: 0,00:00.00,00:14.00,Default,,0000,0000,0000,,aaaaaa
-Dialogue: 0,00:18.00,00:35.00,Default,,0000,0000,0000,,bbbbb
-Dialogue: 0,00:30.00Dialogue: 0,Dialogue: 0,Dialogue: 0,Dialogue: 0,Dialogue: 0,00:21.00,01:05.0000:00.0000:48.00,,00:00.00,01:20.00,Default,,0000,0000,0000,,01:20.00,01:20.00,Default,,0000,0000,0000,,ccccccc
-,Default,,0000,0000,0000,,01:20.00,Default,,0000,0000,0000,,helo
-hahah
-,Default,,0000,0000,0000,,helo
-00:17.00helo
-,00:27.00,Default,,0000,0000,0000,,hello from the other side
+Dialogue: 0,00:10.00,00:19.00,Default,,0000,0000,0000,,fire is hot
+Dialogue: 0,02:57.00,03:15.00,Default,,0000,0000,0000,,bot
+Dialogue: 0,00:19.00,00:35.00,Default,,0000,0000,0000,,bot
+Dialogue: 0,03:29.00,03:45.00,Default,,0000,0000,0000,,bot
+Dialogue: 0,02:20.00,02:27.00,Default,,0000,0000,0000,,bot
+Dialogue: 0,00:24.00,00:38.00,Default,,0000,0000,0000,,bot
+Dialogue: 0,03:55.00,04:10.00,Default,,0000,0000,0000,,bot
+Dialogue: 0,00:30.00,00:48.00,Default,,0000,0000,0000,,bot
+Dialogue: 0,01:12.00,01:25.00,Default,,0000,0000,0000,,bot
+Dialogue: 0,03:22.00,03:30.00,Default,,0000,0000,0000,,bot
+Dialogue: 0,01:04.00,01:21.00,Default,,0000,0000,0000,,bot
+Dialogue: 0,02:21.00,02:26.00,Default,,0000,0000,0000,,bot
+Dialogue: 0,00:18.00,00:24.00,Default,,0000,0000,0000,,bot
+Dialogue: 0,01:29.00,01:41.00,Default,,0000,0000,0000,,bot
+Dialogue: 0,02:11.00,02:18.00,Default,,0000,0000,0000,,bot
+Dialogue: 0,00:51.00,00:58.00,Default,,0000,0000,0000,,bot
+Dialogue: 0,01:38.00,01:45.00,Default,,0000,0000,0000,,bot
+Dialogue: 0,00:59.00,01:04.00,Default,,0000,0000,0000,,bot
+Dialogue: 0,00:27.00,00:45.00,Default,,0000,0000,0000,,bot
+Dialogue: 0,03:12.00,03:25.00,Default,,0000,0000,0000,,bot
+Dialogue: 0,01:43.00,01:58.00,Default,,0000,0000,0000,,bot
