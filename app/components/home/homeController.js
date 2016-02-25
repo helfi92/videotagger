@@ -613,7 +613,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		return Math.floor(conversion);
 	}
 
-	function getTagStartTimeAt(time, timelineIndex)
+	function getMarker(time, timelineIndex)
 	{
 		for (var i = 0; i < timelinesArray[timelineIndex][1].markersArray.length; i++)
 		{
@@ -644,7 +644,11 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			if (index != -1)
 			{
 				var time = getTimeFromPixels(x);
-				var markerStartTime = getTagStartTimeAt(time, index);
+				var markerObj = getMarker(time, index);
+
+				var player = videojs('vid1');
+				player.player().currentTime(markerObj.starttime);
+
 
 				// -------------------------------- DEBUG only. Delete me ------------------------------
 				var debugCanvas = document.getElementById("debugCanvas");
@@ -652,9 +656,9 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 				debugContext.clearRect(0, 0, debugCanvas.width, debugCanvas.height);
 				debugContext.font = '14px Arial';
 			 	debugContext.fillStyle = 'black';
-				debugContext.fillText("Marker Start Time: " + markerStartTime.starttime.toString(), 20, 10);
-				debugContext.fillText("Marker end Time: " + markerStartTime.endtime.toString(), 20, 40);
-				debugContext.fillText("Marker type: " + markerStartTime.markertype.toString(), 20, 70);
+				debugContext.fillText("Marker Start Time: " + markerObj.starttime.toString(), 20, 10);
+				debugContext.fillText("Marker end Time: " + markerObj.endtime.toString(), 20, 40);
+				debugContext.fillText("Marker type: " + markerObj.markertype.toString(), 20, 70);
 				// -------------------------------------------------------------------------------------
 			}
 			
