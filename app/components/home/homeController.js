@@ -598,10 +598,30 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			var y = 20 + (timelineIndex * 30);
 
 			// -------------------------------- DEBUG only. Delete me ------------------------------
-			var colorIndex = 0;
+			var color = 0;
 			// -------------------------------------------------------------------------------------
 
-			ctx.fillStyle = colors[colorIndex];
+			//find index in 
+			var colorIndex = 0;
+			for(var i  = 0 ; i < $scope.tagTypes.length ; i++){
+				if(marker.chapter == $scope.tagTypes[i].name){
+					colorIndex = $scope.tagTypes[i].cl;
+					color = "color"+colorIndex;
+					break;
+				}
+			}
+
+			//ctx.fillStyle = colors[colorIndex];
+			
+			var colorClass = "";
+			for(var i = 0; i < document.styleSheets.length ; i++){
+				if(!!document.styleSheets[i].href && (document.styleSheets[i].href).indexOf("colors.css") > -1){					
+					colorClass = document.styleSheets[i].rules || document.styleSheets[i].cssRules;
+					break;
+				}
+			}
+
+			ctx.fillStyle = colorClass[colorIndex].style.backgroundColor;
 			ctx.fillRect(x1,y, x2 - x1, 20);
 			ctx.fillStyle = "green";
 		},2000);
