@@ -4,6 +4,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
   	var refTag = ref.child('tag');
 	var refChapters = ref.child('chapters');
 	
+	var Auth = Auth;
+
 	$scope.urlLink = '//www.youtube.com/watch?v=iQ4LJSxf3JE&feature=youtu.be.';
   	$scope.tag = $firebaseArray(refTag);
 	$scope.tagTypes = [{
@@ -126,7 +128,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		
 			initTimeline();
 			
-		},1500);
+		},2000);
 	}
 
 	function setCurrentVideoTagList(object){
@@ -205,6 +207,11 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	}
 
 	$scope.addTag = function(tagType,starttime,endtime,link,annotation){
+			
+			if(!!!$scope.requireAuth()){
+				return false;
+			}
+
 			if(isExistantType(tagType.name)){
 				$scope.addTagType(tagType.name);
 			}
@@ -230,11 +237,11 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	};
 
 	$scope.removeTag = function(item,index){
-		//$scope.currentVideoTagList.$remove(item);
-		$scope.currentVideoTagList.splice(index,1);
-		console.log('past ', $scope.currentVideoTagList);
 		
-
+		if(!!!$scope.requireAuth()){
+			return false;
+		}
+		$scope.currentVideoTagList.splice(index,1);
 		refTag.on('child_added',function(snapshot){
 			console.log('item is : ', item);
 			console.log('child added is: ', snapshot.val());
@@ -242,9 +249,15 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 				snapshot.ref().remove();
 			}
 		});
+		return true;
 	}
 	
 	$scope.editTag = function(item,columnNumber){
+		
+		if(!!!$scope.requireAuth()){
+			return false;
+		}
+
 		if(columnNumber == 1){
 			item.editingTag = true;
 		}else if(columnNumber == 2){
@@ -539,7 +552,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		if(relation[tagTypes[i]]){
 				
 		}else{
-			console.log('not here');
 			relation[tagTypes[i]] = i;
 		}
 		

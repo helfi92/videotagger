@@ -48,9 +48,11 @@
     <!-- Actual website -->
     <div class="background-container" style=""><div class="background" style=""></div></div>
     
-    <div ng-controller="navController"
-        ng-include="'app/shared/nav/navView.html'"></div>
+    
+    <div ng-controller="rootController">
+    <div ng-controller="navController" ng-include="'app/shared/nav/navView.html'"></div>
     <div ng-view></div>
+    </div>
 
 </body>
 
@@ -61,6 +63,7 @@
 
 
 <!-- Controllers -->
+<script src="app/shared/rootController.js"></script>
 <script src="app/components/home/homeController.js"></script>
 <script src="app/shared/nav/navController.js"></script>
 
