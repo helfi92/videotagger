@@ -215,9 +215,10 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			if(isExistantType(tagType.name)){
 				$scope.addTagType(tagType.name);
 			}
+
 			var dataObj = {
 				link : link,
-				annotation : annotation,
+				annotation : annotation ? annotation : "",
 				chapter : tagType.name,
 				//tag : tag,
 				starttime : starttime,
