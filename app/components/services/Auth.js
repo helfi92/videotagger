@@ -7,6 +7,11 @@ app.factory("Auth",['$firebaseAuth','$rootScope',function($firebaseAuth,$rootSco
 	      $rootScope.user = authData;
 	       console.log('user is: ', authData);
 	    });
+
+        function errorModal(){
+            $('#errorModal').modal('show');
+        }
+
         var authObject = {
             authData : authData,
             login : function(email, password){
@@ -17,18 +22,25 @@ app.factory("Auth",['$firebaseAuth','$rootScope',function($firebaseAuth,$rootSco
                     function(authData){
                         //$rootScope.isLoggedIn = true;
                         console.log(authData)
+                        return authData;
                     }, 
                     function(errorData){
+                        errorModal();
                     }
                 );
             },
             logout : function(){
-                authRef.$unauth();
+                authRef.$unauth().then(function(data){
+                }, function(errorData){
+                    errorModal();
+                });
             },
             register: function(email,password) {
-	        	return authRef.$createUser({email: email, password: password});
+	        	return authRef.$createUser({email: email, password: password}).then(function(data){
+                },function(errorData){
+                    errorModal();                
+                });
 	    	},
-
         }
 
         return authObject;

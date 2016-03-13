@@ -1,5 +1,6 @@
 app.controller('rootController',['$scope','$rootScope','Auth','$firebaseArray','$timeout','$http', function($scope,$rootScope,Auth,$firebaseArray,$timeout,$http){
-	$scope.createNewAccount = function(email,pw){
+	  
+    $scope.createNewAccount = function(email,pw){
   		Auth.register(email,pw);
   	};
   	$scope.login = function(email,pw){

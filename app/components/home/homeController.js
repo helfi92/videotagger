@@ -3,9 +3,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
   	var ref = new Firebase("https://flickering-heat-6138.firebaseio.com");
   	var refTag = ref.child('tag');
 	var refChapters = ref.child('chapters');
-	
 	var Auth = Auth;
-
 	$scope.urlLink = 'https://www.youtube.com/watch?v=iQ4LJSxf3JE';
   	$scope.tag = $firebaseArray(refTag);
 	$scope.tagTypes = [{
@@ -194,7 +192,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		};
 		rangeSliderInit();
 		showAddTagView = true;
-		$("#create-tag").css("display","initial")
+		$("#create-tag").css("display","initial");
+		document.getElementById("timeline").style.display = "none";
 	}
 
 	function isExistantType(name){
@@ -231,6 +230,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 			addMarkerToTimeline(dataObj);
 			$scope.hideAddTag();
+			document.getElementById("timeline").style.display = "block";
 	}
 
 	$scope.hideAddTag = function(){
@@ -708,7 +708,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		
 		canvas.height = 210;
 		canvas.width = videojs('vid1').player().width();
-		canvas.style.cssText = "border:1px solid #d3d3d3;width:100%;";
+		canvas.style.cssText = "border:1px solid #d3d3d3;";
 
 		document.getElementById("timeline").appendChild(canvas);
 
