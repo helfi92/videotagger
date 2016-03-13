@@ -41,12 +41,23 @@
       </div>  -->
 
       <!-- CONTROLS -->
-      <div style="text-align:center">
-          <button class="btn btn-default" type="button" onclick="ROI()">
-              Select ROI
+      
+      <!-- EMAIL INPUT -->
+      <div style="margin-top:1em;" class="row">     
+        <div class="col-md-4 text-center">
+          <button style="width:100%;" class="btn btn-default" type="button" onclick="ROI()">
+                Select ROI
           </button>
+        </div>
+        <div class="col-md-4 text-center">
+            <input style="width:100%;" class="form-control" type="text" width="300px" name="email" id="email" value="first.last@mail.mcgill.ca">
+        </div>
+        <div class="col-md-4 text-center">
+            <button style="width:100%;" class="btn btn-default" type="button" onclick="submit()">Email Results</button>
+        </div>
       </div>
-      <br>
+
+      
 
 
       <!-- DATA -->
@@ -76,16 +87,13 @@
       <br> -->
 
 
-      <!-- EMAIL INPUT -->
-      <div id="email_input" style="text-align: center">
-          <input class="form-control" type="text" width="300px" name="email" id="email" value="first.last@mail.mcgill.ca">
-          <button class="btn btn-default" type="button" onclick="submit()">Email Results</button>
-      </div>
+      
+      
       <br>   
       <!--controls-->
       <div style="position:relative;"class="">
         <div style="padding-right:0.5em;" class="col-xs-6"><button ng-click="toggleTagsTable()" style="width:100%;margin-bottom:25px;" class="btn red">{{tagsTable.text}}</button></div>
-        <div style="padding-left:0.5em;" class="col-xs-6"><button ng-click="addTagOnClick();" style="width:100%;margin-bottom:25px;" class="btn red">+</button></div>
+        <div style="padding-left:0.5em;" class="col-xs-6"><button ng-click="addTagOnClick();" style="width:100%;margin-bottom:25px;" class="btn red">Add a Tag</button></div>
       </div>
       <!--create tag -->
       <div id="create-tag" style="display:none;padding:0;margin-bottom:25px;background-color:rgba(128,0,0,0.3);padding:25px;" class="col-xs-12">
