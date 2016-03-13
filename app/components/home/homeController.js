@@ -6,7 +6,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	
 	var Auth = Auth;
 
-	$scope.urlLink = '//www.youtube.com/watch?v=iQ4LJSxf3JE&feature=youtu.be.';
+	$scope.urlLink = 'https://www.youtube.com/watch?v=iQ4LJSxf3JE';
   	$scope.tag = $firebaseArray(refTag);
 	$scope.tagTypes = [{
 		name : '',
