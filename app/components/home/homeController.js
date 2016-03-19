@@ -1,11 +1,19 @@
 app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','$timeout','$sce','$http', function($scope,$rootScope,Auth,$firebaseArray,$timeout,$sce,$http){
 
-  	var ref = new Firebase("https://flickering-heat-6138.firebaseio.com");
-  	var refTag = ref.child('tag');
-	var refChapters = ref.child('chapters');
+  	var ref,
+  		refTag,
+  		refChapters;
+
+  	var initFirebase = (function initFirebase(){
+		console.log('initFirebase is called');
+		ref = new Firebase("https://flickering-heat-6138.firebaseio.com");
+		refTag = ref.child('tag');
+		refChapters = ref.child('chapters');
+		$scope.tag = $firebaseArray(refTag);
+	}());
+
 	var Auth = Auth;
 	$scope.urlLink = 'https://www.youtube.com/watch?v=iQ4LJSxf3JE';
-  	$scope.tag = $firebaseArray(refTag);
 	$scope.tagTypes = [{
 		name : '',
 		cl : ''
@@ -20,6 +28,9 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		text : "Show Table",
 		visibility : false,
 	};
+
+
+	
 
     $scope.doneEditing = function (item,newVal,columnNumber) {
         //dong some background ajax calling for persistence...
