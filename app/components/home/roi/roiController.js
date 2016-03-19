@@ -123,8 +123,9 @@ function sendData(email, url, time){
     data = '{"user_email":"' + email + '", "youtube_url":"' + url + '", "points":"' + points + '","time":"' + time + '"}';
     console.log(data);
     $.ajax({
-        url: '/predict',
+        url: 'http://ec2-54-200-65-191.us-west-2.compute.amazonaws.com/predict',
         type: 'POST',
+        crossDomain: true,
         dataType: 'json',
         contentType: "application/json",
         success: function (data) {
