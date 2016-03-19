@@ -495,6 +495,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			}
 		}
 
+		var tagOverlaps = new Array(6);
 		for (var i = 0; i < timelinesArray.length; i++)
 		{
 			if (timelinesArray[i][1].markersArray.length == 0)
@@ -507,32 +508,59 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			}
 			else
 			{
-				var tagOverlap = false;
+				tagOverlaps[i] = false;
 				for (var j = 0; j < timelinesArray[i][1].markersArray.length; j++)
 				{
 					if (isOverlappingAnExistingMarker(marker,timelinesArray[i][1].markersArray[j]))
 					{
-						tagOverlap = true;
+						tagOverlaps[i] = true;
 						break;
 					}
-				}
-					
-				if (tagOverlap == false)
-				{
-					timelinesArray[i][1].markersArray.push(marker);			
-					markerMap[marker.chapter.toString()] = i;
-					drawTagToTimeline(marker, i);
-
-					return;
 				}
 			}
 		}
 
+		var index = getTimelineIndexWithLessTagsAndNoOverlapping(tagOverlaps)
+		if (index != -1)
+		{
+			timelinesArray[index][1].markersArray.push(marker);			
+			markerMap[marker.chapter.toString()] = index;
+			drawTagToTimeline(marker, index);
+
+			return;
+		}
+
 		// The new marker overlaps in all timelines. Add it to the timeline that has less tags
-		var index = getTimelineIndexWithLessTags();
+		index = getTimelineIndexWithLessTags();
+		timelinesArray[index][1].markersArray.push(marker);			
+		markerMap[marker.chapter.toString()] = index;
 		drawTagToTimeline(marker, index);
 	}
-	
+
+	function getTimelineIndexWithLessTagsAndNoOverlapping(tagOverlaps)
+	{
+		var index = -1;
+		var numberOfTags = -1;
+		for (var i = 0; i < timelinesArray.length; i++)
+		{
+			if (tagOverlaps[i] == false)
+			{
+				if (index == -1)
+				{
+					index = i;
+					numberOfTags = timelinesArray[index][1].markersArray.length;
+				}
+
+				if (timelinesArray[i][1].markersArray.length < numberOfTags)
+				{
+					index = i;
+				}
+			}
+		}
+
+		return index;
+	}
+
 	function getTimelineIndexWithLessTags()
 	{
 		var index = 0;
