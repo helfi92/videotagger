@@ -177,7 +177,22 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	    }			    		
 	}	
 
+	function validateUrl(url){
+		if(url.indexOf("youtube") > -1){
+			return "youtube";
+		}else if(url.indexOf("vimeo") > -1){
+			return "vimeo";
+		}else{
+			alert('We only support YouTube and Vimeo videos for now');
+			return null;
+		}
+	}
+
 	$scope.goButtonClicked = function(url){
+		
+		var valUrl = validateUrl(url);
+		console.log(valUrl);
+
 		videojs("vid1").ready(function(){
 			var player = videojs('vid1');
 			player.src(url);
@@ -252,8 +267,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		}
 		$scope.currentVideoTagList.splice(index,1);
 		refTag.on('child_added',function(snapshot){
-			console.log('item is : ', item);
-			console.log('child added is: ', snapshot.val());
 			if(snapshot.val().link == item.link && snapshot.val().starttime == item.starttime && snapshot.val().endtime == item.endtime ){
 				snapshot.ref().remove();
 			}
@@ -274,7 +287,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		}else if(columnNumber == 3){
 			item.editingEndtime = true;
 		}
-		console.log(item);
 		$scope.currentTagOnEdit = item;
 
 		$scope.tagType = item.chapter;
@@ -358,7 +370,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			endtime : endtime,
 			text : text
 		};
-		console.log('startime: ', starttime);
 
 		//dataObj.starttime = '00:08.00';
 		dataObj.starttime = annotationsAdapter(starttime);
@@ -780,7 +791,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	  	ctx.fillRect(xTimelineOffset, 140, timelineObj.width, TIMELINE_HEIGHT);
 	  	ctx.fillRect(xTimelineOffset, 170, timelineObj.width, TIMELINE_HEIGHT);
 
-	  	console.log('width: ', timelineObj.width);
 	  	generateRandomTags(20);
 	  	for(var i = 0 ; i < markerArray.length ; i++ ){
 	  		addMarkerToTimeline(markerArray[i]);
