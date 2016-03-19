@@ -29,9 +29,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		visibility : false,
 	};
 
-
-	
-
     $scope.doneEditing = function (item,newVal,columnNumber) {
         //dong some background ajax calling for persistence...
         console.log('done editing: ',item);
@@ -742,7 +739,13 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 	const xTimelineOffset = 0;
 	function initTimeline(){
-		var canvas = document.createElement("canvas");
+		var canvas;
+		if(!document.getElementById('myCanvas')){
+			canvas = document.createElement("canvas");
+		}else{
+			canvas = document.getElementById('myCanvas');
+		}
+		 
 		canvas.id = "myCanvas";
 		
 		canvas.height = 210;
@@ -753,7 +756,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 
 		var ctx = canvas.getContext("2d");
-
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		// Set listener
 		canvas.addEventListener('mousedown', function(evt) { canvasOnClick(evt, canvas.getBoundingClientRect()); }, false);
 
