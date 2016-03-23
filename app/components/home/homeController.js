@@ -1,5 +1,6 @@
 app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','$timeout','$sce','$http', function($scope,$rootScope,Auth,$firebaseArray,$timeout,$sce,$http){
 
+
   	var ref,
   		refTag,
   		refChapters;
@@ -129,12 +130,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 					})
 
 				});
-				
-			});		
-		
-			initTimeline();
-			
-		},2000);
+			});			
+		});
 	}
 
 	function setCurrentVideoTagList(object){
@@ -146,6 +143,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		    
 		});
 		console.log('currentVideoTagList: ', $scope.currentVideoTagList);
+		$timeout(initTimeline);
 	}
 	
 	function setMarkersForVideo(){
@@ -271,6 +269,12 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 				snapshot.ref().remove();
 			}
 		});
+
+		console.log('is the tag deleted? :', $scope.currentVideoTagList);
+
+		drawCanvasBackground();
+	  	drawTagsOnCanvas(); 
+
 		return true;
 	}
 	
@@ -381,7 +385,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		annotationsAdapter(dataObj);
 
 		$http.post('/annotations', dataObj).then(function(response){
-			console.log('post success:',response);
+			//console.log('post success:',response);
 		},function(err){
 			console.log('post error: ', err);
 		})
@@ -422,15 +426,13 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		   
 		});
 		//player.markers.removeAll();	
+		setTagTypes();
 
 	}
 
-	init();
-
-
-	var refChapterIndex = 0;
+	$timeout(init);
 	
-	setTagTypes();
+	var refChapterIndex = 0;
 	
 	function rangeSliderInit(){
 		var player = videojs('vid1');
@@ -467,11 +469,10 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 
 	//timeline
-
-
 	var timelineObj = {
 		videoLength : 0,
-		width : 0
+		width : 0,
+		relativeTimelineSize : 1
 	}
 
 	const TIMELINE_HEIGHT = 20; 
@@ -479,10 +480,17 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	var timelinesArray = [];
 	var markerMap = {};
 
-	for(var i = 0 ; i < 6 ; i++){
-		var markersArray = {markersArray : []};
-		timelinesArray.push([i,markersArray]);		
-	}
+	
+
+	var populateMarkersArray = function(){
+		timelinesArray = [];
+		for(var i = 0 ; i < 6 ; i++){
+			var markersArray = {markersArray : []};
+			timelinesArray.push([i,markersArray]);		
+		}
+	};
+	
+	populateMarkersArray();
 
 	//maker object
 	function Marker(starttime,endtime,markertype){
@@ -491,21 +499,17 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		this.chapter = markertype;
 	}
 
-	function addMarkerToTimeline(marker)
-	{	
+	function addMarkerToTimeline(marker){	
 		var value = markerMap[marker.chapter.toString()];
-		if (!(value === undefined))
-		{
+		if (!(value === undefined)){
 			timelinesArray[value][1].markersArray.push(marker);
 			drawTagToTimeline(marker, value);
 
 			return;
 		}
 
-		for (var i = 0; i < timelinesArray.length; i++)
-		{
-			if (timelinesArray[i][1].markersArray.length == 0)
-			{
+		for (var i = 0; i < timelinesArray.length; i++){
+			if (timelinesArray[i][1].markersArray.length == 0){
 				timelinesArray[i][1].markersArray.push(marker);					
 				markerMap[marker.chapter.toString()] = i;
 				drawTagToTimeline(marker, i);
@@ -515,18 +519,15 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		}
 
 		var tagOverlaps = new Array(6);
-		for (var i = 0; i < timelinesArray.length; i++)
-		{
-			if (timelinesArray[i][1].markersArray.length == 0)
-			{	
+		for (var i = 0; i < timelinesArray.length; i++){
+			if (timelinesArray[i][1].markersArray.length == 0){	
 				timelinesArray[i][1].markersArray.push(marker);					
 				markerMap[marker.chapter.toString()] = i;
 				drawTagToTimeline(marker, i);
 			
 				return;
 			}
-			else
-			{
+			else{
 				tagOverlaps[i] = false;
 				for (var j = 0; j < timelinesArray[i][1].markersArray.length; j++)
 				{
@@ -540,8 +541,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		}
 
 		var index = getTimelineIndexWithLessTagsAndNoOverlapping(tagOverlaps)
-		if (index != -1)
-		{
+		if (index != -1){
 			timelinesArray[index][1].markersArray.push(marker);			
 			markerMap[marker.chapter.toString()] = index;
 			drawTagToTimeline(marker, index);
@@ -560,18 +560,14 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	{
 		var index = -1;
 		var numberOfTags = -1;
-		for (var i = 0; i < timelinesArray.length; i++)
-		{
-			if (tagOverlaps[i] == false)
-			{
-				if (index == -1)
-				{
+		for (var i = 0; i < timelinesArray.length; i++){
+			if (tagOverlaps[i] == false){
+				if (index == -1){
 					index = i;
 					numberOfTags = timelinesArray[index][1].markersArray.length;
 				}
 
-				if (timelinesArray[i][1].markersArray.length < numberOfTags)
-				{
+				if (timelinesArray[i][1].markersArray.length < numberOfTags){
 					index = i;
 				}
 			}
@@ -580,12 +576,10 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		return index;
 	}
 
-	function getTimelineIndexWithLessTags()
-	{
+	function getTimelineIndexWithLessTags(){
 		var index = 0;
 		var numberOfTags = timelinesArray[index][1].markersArray.length;
-		for (var i = 1; i < timelinesArray.length; i++)
-		{
+		for (var i = 1; i < timelinesArray.length; i++){
 			if (timelinesArray[i][1].markersArray.length < numberOfTags)
 			{
 				index = i;
@@ -615,36 +609,36 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 	var markerArray = [];
 	function generateRandomTags(numberOfTags){
-		for (var i = 0; i < numberOfTags; i++){
-			var startTime = Math.floor(Math.random() * timelineObj.videoLength);
-			var length = Math.floor((Math.random() * 20) + 1);
-			var tagTypeIndex = Math.floor(Math.random() * 10);
+		// for (var i = 0; i < numberOfTags; i++){
+		// 	var startTime = Math.floor(Math.random() * timelineObj.videoLength);
+		// 	var length = Math.floor((Math.random() * 20) + 1);
+		// 	var tagTypeIndex = Math.floor(Math.random() * 10);
 
-			if (startTime > 40){
-				startTime -= 25;
-			}
+		// 	if (startTime > 40){
+		// 		startTime -= 25;
+		// 	}
 
-			if (tagTypeIndex == 10){
-				tagTypeIndex = 9;
-			}
+		// 	if (tagTypeIndex == 10){
+		// 		tagTypeIndex = 9;
+		// 	}
 
-			//marker = new Marker(startTime, startTime + length, "Tag" + tagTypeIndex);
+		// 	//marker = new Marker(startTime, startTime + length, "Tag" + tagTypeIndex);
 
-			marker = {
-				annotation : 'bot',
-				chapter : {
-					name : "Tag" + tagTypeIndex
-				},
-				endtime : startTime + length,
-				link : $scope.urlLink,
-				starttime : startTime
-			}
+		// 	marker = {
+		// 		annotation : 'bot',
+		// 		chapter : {
+		// 			name : "Tag" + tagTypeIndex
+		// 		},
+		// 		endtime : startTime + length,
+		// 		link : $scope.urlLink,
+		// 		starttime : startTime
+		// 	}
 
-			//$scope.addTag(marker.chapter,marker.starttime,marker.endtime,marker.link,marker.annotation);
+		// 	// $scope.addTag(marker.chapter,marker.starttime,marker.endtime,marker.link,marker.annotation);
 
-			markerArray.push(marker);
+		// 	markerArray.push(marker);
 
-		}
+		// }
 		markerArray = $scope.currentVideoTagList;
 	}
 
@@ -687,6 +681,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			}
 		}
 
+		ctx.globalCompositeOperation = "source-over";
 		ctx.fillStyle = colorClass[colorIndex].style.backgroundColor;
 		ctx.fillRect(x1,y, x2 - x1, 20);
 		ctx.fillStyle = "green";
@@ -772,29 +767,101 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		canvas.addEventListener('mousedown', function(evt) { canvasOnClick(evt, canvas.getBoundingClientRect()); }, false);
 
 		//Compute timeline dimensions
-	 	const relativeTimelineSize = 1;
-	  	timelineObj.width = (canvas.width * relativeTimelineSize) - xTimelineOffset;
+	  	timelineObj.width = (canvas.width * timelineObj.relativeTimelineSize) - xTimelineOffset;
 	  	
 	  	// Not working!
 	  	timelineObj.videoLength = videojs('vid1').player().duration();
 	  	//timelineObj.videoLength = 266;
-
-	  	//Compute text dimensions
-	  	const xTextOffset = canvas.width * (1.0 - relativeTimelineSize);
-
-	  	//Timeline bars
-	  	ctx.fillStyle="#7d7a79";
-	  	ctx.fillRect(xTimelineOffset, 20, timelineObj.width, TIMELINE_HEIGHT);
-	  	ctx.fillRect(xTimelineOffset, 50, timelineObj.width, TIMELINE_HEIGHT);
-	  	ctx.fillRect(xTimelineOffset, 80, timelineObj.width, TIMELINE_HEIGHT);
-	  	ctx.fillRect(xTimelineOffset, 110, timelineObj.width, TIMELINE_HEIGHT);
-	  	ctx.fillRect(xTimelineOffset, 140, timelineObj.width, TIMELINE_HEIGHT);
-	  	ctx.fillRect(xTimelineOffset, 170, timelineObj.width, TIMELINE_HEIGHT);
-
+		 
 	  	generateRandomTags(20);
 	  	for(var i = 0 ; i < markerArray.length ; i++ ){
 	  		addMarkerToTimeline(markerArray[i]);
 	  	}
+
+	  	drawCanvasBackground();
+	  	drawTagsOnCanvas(); 
+	}
+
+	function drawCanvasBackground(){
+		var canvas,
+			ctx; 
+
+		canvas = document.getElementById('myCanvas');
+		ctx = canvas.getContext("2d");
+
+		
+		var canvas_height = {			
+			one : 35,
+			two : 70,
+			three : 105,
+			four : 140,
+			five : 175,
+			six : 210,
+			selected : null
+		};
+
+		console.log('canvasheight: ', canvas_height.selected);
+
+	  	//Compute text dimensions
+	  	const xTextOffset = canvas.width * (1.0 - timelineObj.relativeTimelineSize);
+
+		console.log('timelinesarray: ',timelinesArray);
+
+		//Timeline bars
+		ctx.globalCompositeOperation='destination-over';
+	  	ctx.fillStyle="#7d7a79";
+	  	
+	
+
+	  	if(timelinesArray[0][1].markersArray.length > 0){
+	  		canvas_height.selected = canvas_height.one;
+	  	}
+	  	if(timelinesArray[1][1].markersArray.length > 0){
+	  		canvas_height.selected = canvas_height.two;
+	  	}
+	  	if(timelinesArray[2][1].markersArray.length > 0){
+	  		canvas_height.selected = canvas_height.three;
+	  	}
+	  	if(timelinesArray[3][1].markersArray.length > 0){
+	  		canvas_height.selected = canvas_height.four;
+	  	}
+	  	if(timelinesArray[4][1].markersArray.length > 0){
+	  		canvas_height.selected = canvas_height.five;
+	  	}
+	  	if(timelinesArray[5][1].markersArray.length > 0){
+	  		canvas_height.selected = canvas_height.six;
+	  	}
+
+	  	canvas.height = canvas_height.selected;
+	  	
+	  	if(timelinesArray[0][1].markersArray.length > 0){
+	  		ctx.fillRect(xTimelineOffset, 20, timelineObj.width, TIMELINE_HEIGHT);		
+	  	}
+	  	if(timelinesArray[1][1].markersArray.length > 0){
+	  		ctx.fillRect(xTimelineOffset, 50, timelineObj.width, TIMELINE_HEIGHT);
+	  	}
+	  	if(timelinesArray[2][1].markersArray.length > 0){
+	  		ctx.fillRect(xTimelineOffset, 80, timelineObj.width, TIMELINE_HEIGHT);
+	  	}
+	  	if(timelinesArray[3][1].markersArray.length > 0){
+	  		ctx.fillRect(xTimelineOffset, 110, timelineObj.width, TIMELINE_HEIGHT);
+	  	}
+	  	if(timelinesArray[4][1].markersArray.length > 0){
+	  		ctx.fillRect(xTimelineOffset, 140, timelineObj.width, TIMELINE_HEIGHT);
+	  	}
+	  	if(timelinesArray[5][1].markersArray.length > 0){
+	  		ctx.fillRect(xTimelineOffset, 170, timelineObj.width, TIMELINE_HEIGHT);
+	  	}
+
+	  	
+
+	}
+
+	function drawTagsOnCanvas(){
+		console.log('current: ', $scope.currentVideoTagList);
+		for(var i = 0 in $scope.currentVideoTagList){
+			addMarkerToTimeline($scope.currentVideoTagList[i]);
+		}
 	}
 
 }]);
