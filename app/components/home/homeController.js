@@ -256,6 +256,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 	$scope.hideAddTag = function(){
 		document.getElementById("create-tag").style.display = "none";
+		document.getElementById("timeline").style.display = "block";
 	};
 
 	$scope.removeTag = function(item,index){
