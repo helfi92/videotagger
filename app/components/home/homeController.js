@@ -210,7 +210,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			
 		});
 	};
-			
+	
 	$scope.addTagOnClick = function(){
 		var player = videojs('vid1');
 		$scope.addOptions = {
@@ -219,7 +219,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			starttime : 0,
 			endtime : player.duration() * 0.3
 		};
-		rangeSliderInit('vid1','slider');
+		rangeSliderInit('vid1','slider',0,30);
 		showAddTagView = true;
 		$("#create-tag").css("display","initial");
 		document.getElementById("timeline").style.display = "none";
@@ -449,7 +449,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	
 	var refChapterIndex = 0;
 	
-	function rangeSliderInit(playerId,sliderId){
+	function rangeSliderInit(playerId,sliderId,start_nbr,end_nbr){
 		var player = videojs(playerId);
 		var html5Slider = document.getElementById(sliderId);
 		
@@ -457,8 +457,22 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			return;
 		}
 
+		var start,
+			end;
+
+		if(start_nbr != null){
+			start = start_nbr;
+		}else{
+			start = 0;
+		}
+		if(end_nbr != null){
+			end = end_nbr;
+		}else{
+			end = player.duration();
+		}
+
 		noUiSlider.create(html5Slider, {
-			start: [ 0, 30 ],
+			start: [ start, end ],
 			connect: true,
 			range: {
 				'min': 0,
@@ -482,9 +496,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		});	
 	}
 
-	function sliderDetection(){
-
-	}
+	
 
 
 	//timeline
