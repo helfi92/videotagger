@@ -211,15 +211,32 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		});
 	};
 	
-	$scope.addTagOnClick = function(){
+	function videoTimeInPercentage(time){
 		var player = videojs('vid1');
+
+		return player.currentTime() / player.duration() * 100; 
+	}
+
+	$scope.addTagOnClick = function(){
+		var player = videojs('vid1'),
+			sliderEndInit,
+			sliderStartInit;
+		
 		$scope.addOptions = {
 			tagType : '',
 			tagname : '',
 			starttime : 0,
 			endtime : player.duration() * 0.3
 		};
-		rangeSliderInit('vid1','slider',0,30);
+		
+		if(videoTimeInPercentage(player.currentTime()) + 30 < 100){
+			sliderEndInit = parseInt(videoTimeInPercentage(player.currentTime()) + 30, 10);
+		}else{
+			sliderEndInit = parseInt(100,10);
+		}
+		sliderStartInit = videoTimeInPercentage(player.currentTime());
+
+		rangeSliderInit('vid1','slider',sliderStartInit,sliderEndInit);
 		showAddTagView = true;
 		$("#create-tag").css("display","initial");
 		document.getElementById("timeline").style.display = "none";
@@ -454,6 +471,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		var html5Slider = document.getElementById(sliderId);
 		
 		if(!!html5Slider.childElementCount){
+			html5Slider.noUiSlider.set([start_nbr, end_nbr]);
 			return;
 		}
 
