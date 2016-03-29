@@ -21,7 +21,7 @@
               width="640"
               height="360"
               data-setup='{ "techOrder": ["youtube"]}'>
-              <source src="https://www.youtube.com/watch?v=iQ4LJSxf3JE" type='video/youtube'
+              <source src="https://www.youtube.com/watch?v=UiyDmqO59QE" type='video/youtube'
           />
           </video>
       </div>
@@ -62,8 +62,11 @@
         </div>
       </div>
 
-      
-
+      <button id="my-request-btn" ng-click="myRequestsOnClick()">My Requests</button>
+        <div id="my-request-view" style="padding:0;display:none;" class="col-xs-12">
+          <div style="position:relative;"ng-include="'app/components/requests/requestsView.html'">    
+        </div>
+      </div>
 
       <!-- DATA -->
       <!-- <div id="topLeft" class="data">

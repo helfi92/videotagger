@@ -1,0 +1,60 @@
+
+<!-- CONTENT -->
+<div style="" class="text-center">
+  <div style="z-index: 1;">
+	<div class=" text-center">
+		<h1>Requests</h1><hr>
+		<table   class="table requests table-bordered table-striped table-background">
+		    <thead>
+		      <tr>
+		        <td>
+		        	<a href="">
+		          
+		          Time
+		        	</a>
+		    	</td>
+		        
+		        <td>
+		        	<a  href="">
+		          
+		          User Email
+		        	</a>
+		        </td>
+		        <td>
+		        	<a href="">
+		          
+		          Video
+		        	</a>
+		    	</td>
+		    	<td>
+		        	<a href="">
+		          
+		          Status
+		        	</a>
+		    	</td>
+		       
+		      </tr>
+		    </thead>
+		    
+		    <tbody>
+		      <tr ng-repeat="item in myRequests">
+		        <td>{{ item.time }}</td>
+		        <td>{{ item.user_email }}</td>
+		        <td>{{ item.video_url }}</td>
+		        <td>{{ item.status }}</td>
+
+		      </tr>
+
+		    </tbody>
+		    
+		  </table>
+	</div>
+
+
+  </div>
+</div>
+
+
+
+
+

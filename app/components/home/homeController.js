@@ -3,13 +3,16 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
   	var ref,
   		refTag,
-  		refChapters;
+  		ref_generation_requests;
 
   	var initFirebase = (function initFirebase(){
 		ref = new Firebase("https://flickering-heat-6138.firebaseio.com");
 		refTag = ref.child('tag');
-		refChapters = ref.child('chapters');
+		ref_generation_requests = ref.child('tag-generation-request');
+		
 		$scope.tag = $firebaseArray(refTag);
+
+		getListOfRequests(getMyRequests);
 	}());
 
 	var Auth = Auth;
@@ -21,7 +24,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 	
 	$scope.currentVideoTagList = [];
-	
+	$scope.requestsList = [];
+	$scope.myRequests = [];
 	$scope.tagType = {};
   	$scope.tagTypes = [];
 
@@ -29,6 +33,31 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		text : "Show Table",
 		visibility : false,
 	};
+
+    	
+    function getListOfRequests(callback){
+		$scope.requestsList = [];
+		ref_generation_requests.on('value',function(snapshot){
+
+			$timeout(function(){
+				$scope.requestsList = snapshot.val();
+				callback();
+			});
+
+			
+		});
+
+	}
+
+	function getMyRequests(){
+		var email = $rootScope.user.password.email;
+		for( var i = 0 in $scope.requestsList){
+			if($scope.requestsList[i].user_email == email){
+				$scope.myRequests.push($scope.requestsList[i]);
+			}
+		}
+		$timeout();
+	}
 
     $scope.doneEditing = function (item,newVal,columnNumber) {
         //dong some background ajax calling for persistence...
@@ -45,6 +74,23 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
         }
         $scope.updateTag();
     };
+
+    $scope.myRequestsOnClick = function(elem){
+    	
+    	if(!!!$scope.requireAuth()){
+			return false;
+		}
+    	
+    	var elem = document.getElementById("my-request-view");
+		if(elem.style.display == "none"){
+			elem.style.display = "block";
+			document.getElementById("my-request-btn").innerText = "Hide your Requests"
+		}else{
+			elem.style.display = "none";
+			document.getElementById("my-request-btn").innerText = "My Requests"
+		}
+
+    }
 
     function timeAdapter(str){
     	//var str = "80:67";

@@ -63,7 +63,10 @@
 
 <div style="background-color:white;position:fixed;width:100%;padding:10px 0;z-index:10;">
 	<div style="height:100%;"ng-show="$parent.user">
-		<div class="col-xs-4" style="height:100%;"><img style="margin-top:-20px;height:60px;" src="assets/img/bird-mcgill.png"></div>
+		<div class="col-xs-4" style="height:100%;">
+      <img style="margin-top:-20px;height:60px;" src="assets/img/bird-mcgill.png">
+      <a href="#/requests"><button>Requests</button></a>
+    </div>
 		<div class="col-xs-4 text-center" style="height:100%;"><h4>Virtual Tagger<h4></div>
 		<div class="col-xs-4" style="height:100%;"><button ng-click="logout()" class="btn btn-primary pull-right">Logout</button></div>
 
