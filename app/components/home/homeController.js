@@ -13,11 +13,12 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	}());
 
 	var Auth = Auth;
-	$scope.urlLink = 'https://www.youtube.com/watch?v=iQ4LJSxf3JE';
+	$scope.urlLink = 'https://www.youtube.com/watch?v=UiyDmqO59QE';
 	$scope.tagTypes = [{
 		name : '',
 		cl : ''
 	}];
+
 	
 	$scope.currentVideoTagList = [];
 	
@@ -93,16 +94,27 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	   $select.selected = userInputItem;
 	 }
 	}
+	function addDefaultTags(){
+		$http.get("assets/json/defaultTags.json").then(function(data){
+			var type_nbr = data.data;
+			console.log('default tags: ', type_nbr);
+			for(var i = 0 in type_nbr){
+				$scope.tagTypes.push(type_nbr[i]);
+			}
+		});
 	
+	}
+
 	function setTagTypes(){
-	
+		
 		$timeout(function(){
+			$scope.tagTypes = [];
+			addDefaultTags();
 			videojs("vid1").ready(function(){
 				
 				refTag.on('value',function(snapshot){
 					var refChapterIndex = 0;
 					setCurrentVideoTagList(snapshot);
-					$scope.tagTypes=[];
 					for( var i = 0 ; i < $scope.currentVideoTagList.length ; i++){
 						//do not add duplicate chapters
 					    var checkForDuplicate = function(object,str){
@@ -119,7 +131,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 					    	refChapterIndex++;
 					    }	 
 
-					}
+					}					
 					$http.post('/initAnnotation', {}).then(function(response){
 						console.log('post success:',response);
 						setMarkersForVideo();		
@@ -207,7 +219,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			starttime : 0,
 			endtime : player.duration() * 0.3
 		};
-		rangeSliderInit();
+		rangeSliderInit('vid1','slider');
 		showAddTagView = true;
 		$("#create-tag").css("display","initial");
 		document.getElementById("timeline").style.display = "none";
@@ -437,9 +449,9 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	
 	var refChapterIndex = 0;
 	
-	function rangeSliderInit(){
-		var player = videojs('vid1');
-		var html5Slider = document.getElementById('slider');
+	function rangeSliderInit(playerId,sliderId){
+		var player = videojs(playerId);
+		var html5Slider = document.getElementById(sliderId);
 		
 		if(!!html5Slider.childElementCount){
 			return;
@@ -468,6 +480,10 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			}
 			$timeout();
 		});	
+	}
+
+	function sliderDetection(){
+
 	}
 
 
@@ -504,7 +520,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 	function isTagAlreadyExistant(marker){
 		for(var i = 0 ; i < $scope.currentVideoTagList.length ; i++){
-			var existantMarker = $scope.currentVideoTagList[1];
+			var existantMarker = $scope.currentVideoTagList[i];
 			if(parseInt(existantMarker.starttime,10) == parseInt(marker.starttime,10) && parseInt(existantMarker.endtime,10) == parseInt(marker.endtime, 10) && existantMarker.chapter == marker.chapter){
 				return true;
 			}
