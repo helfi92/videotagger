@@ -6,7 +6,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
   		refChapters;
 
   	var initFirebase = (function initFirebase(){
-		console.log('initFirebase is called');
 		ref = new Firebase("https://flickering-heat-6138.firebaseio.com");
 		refTag = ref.child('tag');
 		refChapters = ref.child('chapters');
@@ -32,7 +31,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
     $scope.doneEditing = function (item,newVal,columnNumber) {
         //dong some background ajax calling for persistence...
-        console.log('done editing: ',item);
         if(columnNumber == 1){
 			//$scope.tagname = newVal;
 			$scope.tagType = newVal;
@@ -142,7 +140,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		    }
 		    
 		});
-		console.log('currentVideoTagList: ', $scope.currentVideoTagList);
 		$timeout(initTimeline);
 	}
 	
@@ -189,7 +186,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	$scope.goButtonClicked = function(url){
 		
 		var valUrl = validateUrl(url);
-		console.log(valUrl);
 
 		videojs("vid1").ready(function(){
 			var player = videojs('vid1');
@@ -278,7 +274,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			}
 		});
 
-		console.log('is the tag deleted? :', $scope.currentVideoTagList);
 
 		drawCanvasBackground();
 	  	drawTagsOnCanvas(); 
@@ -705,7 +700,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		}
 
 		ctx.globalCompositeOperation = "source-over";
-		console.log('colorIndex: ', colorIndex);
 		if(colorIndex > 69){
 			alert('Application currently hold only 70 tag types. Please remove some tag types');
 		}
@@ -827,12 +821,10 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			selected : null
 		};
 
-		console.log('canvasheight: ', canvas_height.selected);
 
 	  	//Compute text dimensions
 	  	const xTextOffset = canvas.width * (1.0 - timelineObj.relativeTimelineSize);
 
-		console.log('timelinesarray: ',timelinesArray);
 
 		//Timeline bars
 		
@@ -886,7 +878,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	}
 
 	function drawTagsOnCanvas(){
-		console.log('current: ', $scope.currentVideoTagList);
 		for(var i = 0 in $scope.currentVideoTagList){
 			addMarkerToTimeline($scope.currentVideoTagList[i]);
 		}

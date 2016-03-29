@@ -31,16 +31,21 @@
               <span></span>
           </div>
       </div>
-      <div>
-        <div style="position:relative;" ng-include="'app/components/home/timeline.html'"></div>  
-      </div> 
 
-      <!-- TIMELINE -->
-      <!--       <div>
-          <div style="position:relative;" ng-include="'app/components/home/timeline.html'"></div>
-      </div>  -->
+      <div style="position:relative;">
+        <div style="padding-right:0.5em;" class="col-xs-6">
+          <button ng-click="toggleTagsTable()" style="width:100%;margin-bottom:25px;" class="btn red">{{tagsTable.text}}</button>
+        </div>
+        <div style="padding-left:0.5em;" class="col-xs-6">
+          <button ng-click="addTagOnClick();" style="width:100%;margin-bottom:25px;" class="btn red">Add a Tag</button>
+        </div>
+      </div>
+      
 
-      <!-- CONTROLS -->
+      <div style="text-align:center;" id="timeline"></div>
+
+      <br>
+      
       
       <!-- EMAIL INPUT -->
       <div style="margin-top:1em;" class="row">     
@@ -90,11 +95,7 @@
       
       
       <br>   
-      <!--controls-->
-      <div style="position:relative;"class="">
-        <div style="padding-right:0.5em;" class="col-xs-6"><button ng-click="toggleTagsTable()" style="width:100%;margin-bottom:25px;" class="btn red">{{tagsTable.text}}</button></div>
-        <div style="padding-left:0.5em;" class="col-xs-6"><button ng-click="addTagOnClick();" style="width:100%;margin-bottom:25px;" class="btn red">Add a Tag</button></div>
-      </div>
+      
       <!--create tag -->
       <div id="create-tag" style="display:none;padding:0;margin-bottom:25px;background-color:rgba(128,0,0,0.3);padding:25px;" class="col-xs-12">
         <div style="position:relative;"ng-include="'app/components/home/addTagModal.html'"></div>

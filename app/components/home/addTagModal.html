@@ -1,6 +1,6 @@
 <div style="height:100%;">
   <div style="width:100%;height:50px;"><i ng-click="hideAddTag()" class="fa fa-2x fa-times pull-right"></i></div>
-  <div style="margin-bottom:25px;" class="">
+  <div style="margin-bottom:25px;">
     <div id="slider"></div>
   </div>
   <div>
@@ -22,9 +22,9 @@
       </div>
       <div class="col-xs-12" style="width:100%;">
           <textarea ng-model="annotations" placeholder="Annotations (optional)" style="width:100%;height:125px;"></textarea>
-        </div>
+      </div>
       <div class="col-xs-12" style="width:100%;">
         <button ng-click="addTag(tagType.selected,addOptions.starttime,addOptions.endtime,urlLink,annotations);" type="button" class="btn btn-primary pull-right" data-dismiss="modal">Create</button>
       </div>
-    </div>
+  </div>
 </div>
