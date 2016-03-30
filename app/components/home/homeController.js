@@ -975,5 +975,163 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		}
 	}
 
+
+	$scope.roiController = (function(){
+		var video,
+			playing,
+			initialX,
+			initialY,
+			iX,
+			iY,
+			pX,
+			pY,
+			time,
+			video_url,
+			user_email,
+			data;
+		
+
+		return {
+			offset : function(type){
+			    var offset = $("#vid1").offset();
+
+			    if (type == "top") {
+			        return offset.top;
+			    } else if (type == "left") {
+			        return offset.left;
+			    } else {
+			        return "";
+			    }
+			},
+
+			submit : function(){
+			    if(!!!$scope.requireAuth()){
+					return false;
+				}
+			    video = videojs("vid1").player();
+			    user_email = $("#email").val();
+			    video_url = video.src();
+			    $scope.roiController.sendData(user_email, video_url, time);
+			},
+
+			ROI : function(e) {
+			    video = videojs("vid1").player();
+			    $(".video-js").css("pointer-events", "none");
+			    $(document).bind("mousedown", $scope.roiController.startSelect);
+			    playing = !video.paused();
+			    if(playing){
+			        video.pause();
+			    }
+			},
+
+			startSelect : function(e) {
+			    $(document).unbind("mousedown", $scope.roiController.startSelect);
+			    $(".ghost-select").addClass("ghost-active");
+			    $(".ghost-select").css({
+			        'left': e.pageX,
+			        'top': e.pageY
+			    });
+
+			    initialX = e.pageX;
+			    initialY = e.pageY;
+
+			    $(document).bind("mouseup", $scope.roiController.endSelect);
+			    $(document).bind("mousemove", $scope.roiController.openSelector);
+
+			    iX = initialX - $scope.roiController.offset("left");
+			    iY = initialY - $scope.roiController.offset("top");
+			    pX = iX;
+			    pY = iY;
+
+			    $scope.roiController.printData();
+			},
+
+			endSelect : function(e) {
+			    video = videojs("vid1").player();
+			    $(document).unbind("mousemove", $scope.roiController.openSelector);
+			    $(document).unbind("mouseup", $scope.roiController.endSelect);
+			    $(".ghost-select").removeClass("ghost-active");
+			    $(".ghost-select").width(0).height(0);
+			    $(".video-js").css("pointer-events", "auto");
+			    time = video.currentTime();
+			    video_url = video.src();
+			    $("#time").html("Time: " + time);
+			    $("#url").html("URL: " + video_url);
+			    if(playing){
+			        video.play();
+			    }
+			},
+
+			openSelector : function(e) {
+			    var w = Math.abs(initialX - e.pageX);
+			    var h = Math.abs(initialY - e.pageY);
+
+			    $(".ghost-select").css({
+			        'width': w,
+			        'height': h
+			    });
+			    if (e.pageX <= initialX && e.pageY >= initialY) {
+			        $(".ghost-select").css({
+			            'left': e.pageX
+			        });
+			    } else if (e.pageY <= initialY && e.pageX >= initialX) {
+			        $(".ghost-select").css({
+			            'top': e.pageY
+			        });
+			    } else if (e.pageY < initialY && e.pageX < initialX) {
+			        $(".ghost-select").css({
+			            'left': e.pageX,
+			            "top": e.pageY
+			        });
+			    }
+
+			    pX = e.pageX - $scope.roiController.offset("left");
+			    pY = e.pageY - $scope.roiController.offset("top");
+			    iX = initialX - $scope.roiController.offset("left");
+			    iY = initialY - $scope.roiController.offset("top");
+
+			    $scope.roiController.printData();
+			},
+
+			printData : function(){
+			    $("#topLeft").html("TL: " + iX + ", " + iY);
+			    $("#topRight").html("TR: " + pX + ", " + iY);
+			    $("#bottomRight").html("BR: " + pX + ", " + pY);
+			    $("#bottomLeft").html("BL: " + iX + ", " + pY);
+			},
+
+			sendData : function(email, url, time){
+			    var valTL = iX + ", " + iY;
+			    var valTR = pX + ", " + iY;
+			    var valBR = pX + ", " + pY;
+			    var valBL = iX + ", " + pY;
+			    var points = [iX, iY, pX, iY, pX, pY, iX, pY];
+			    points = points.toString();
+
+			    console.log("sending data!");
+
+			    data = '{"user_email":"' + email + '", "youtube_url":"' + url + '", "points":"' + points + '","time":"' + time + '"}';
+			    console.log(data);
+			    $.ajax({
+			        url: 'http://ec2-54-200-65-191.us-west-2.compute.amazonaws.com/predict',
+			        type: 'POST',
+			        crossDomain: true,
+			        dataType: 'json',
+			        contentType: "application/json",
+			        success: function (data) {
+			            console.log(data);
+			        },
+			        headers: {'Content-Type':'application/json'},
+			        processData: false,
+			        data: data
+			    }); 
+			}
+		}
+
+	}());
+	
+	console.log('roiController: ', $scope.roiController);
+
+
 }]);
 

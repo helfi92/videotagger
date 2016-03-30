@@ -50,7 +50,7 @@
       <!-- EMAIL INPUT -->
       <div style="margin-top:1em;" class="row">     
         <div class="col-md-4 text-center">
-          <button style="width:100%;" class="btn btn-default" type="button" onclick="ROI()">
+          <button style="width:100%;" class="btn btn-default" type="button" ng-click="roiController.ROI()">
                 Select ROI
           </button>
         </div>
@@ -58,7 +58,7 @@
             <input style="width:100%;" class="form-control" type="text" width="300px" name="email" id="email" value="first.last@mail.mcgill.ca">
         </div>
         <div class="col-md-4 text-center">
-            <button style="width:100%;" class="btn btn-default" type="button" onclick="submit()">Email Results</button>
+            <button style="width:100%;" class="btn btn-default" type="button" ng-click="roiController.submit()">Email Results</button>
         </div>
       </div>
 
