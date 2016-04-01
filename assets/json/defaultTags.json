@@ -1,0 +1,111 @@
+[
+	{
+		"name" : "administration",
+		"cl" : "462"	
+	},
+	{
+		"name" : "air quality",
+		"cl" : "463"	
+	},
+	{
+		"name" : "animal health",
+		"cl" : "464"	
+	},
+	{
+		"name" : "aviation",
+		"cl" : "465"	
+	},
+	{
+		"name" : "civil",
+		"cl" : "466"	
+	},
+	{
+		"name" : "criminal activity",
+		"cl" : "467"	
+	},
+	{
+		"name" : "dangerous animal",
+		"cl" : "468"	
+	},
+	{
+		"name" : "fire",
+		"cl" : "469"	
+	},
+	{
+		"name" : "flood",
+		"cl" : "470"	
+	},
+	{
+		"name" : "geophysical",
+		"cl" : "471"
+	},
+	{
+		"name" : "hazardou materials",
+		"cl" : "472"	
+	},
+	{
+		"name" : "health",
+		"cl" : "473"	
+	},
+	{
+		"name" : "ice",
+		"cl" : "474"	
+	},
+	{
+		"name" : "marine",
+		"cl" : "475"	
+	},
+	{
+		"name" : "missing person",
+		"cl" : "476"	
+	},
+	{
+		"name" : "other",
+		"cl" : "477"	
+	},
+	{
+		"name" : "plant health",
+		"cl" : "478"	
+	},
+	{
+		"name" : "preparedness reminders",
+		"cl" : "479"	
+	},
+	{
+		"name" : "product safety",
+		"cl" : "480"	
+	},
+	{
+		"name" : "public services",
+		"cl" : "481"
+	},
+	{
+		"name" : "railway",
+		"cl" : "482"	
+	},
+	{
+		"name" : "roadway",
+		"cl" : "483"	
+	},
+	{
+		"name" : "storm",
+		"cl" : "484"	
+	},
+	{
+		"name" : "temperature",
+		"cl" : "485"	
+	},
+	{
+		"name" : "test message",
+		"cl" : "486"	
+	},
+	{
+		"name" : "utility",
+		"cl" : "487"	
+	},
+	{
+		"name" : "wind",
+		"cl" : "488"	
+	}
+
+]
