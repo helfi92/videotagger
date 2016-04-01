@@ -1055,7 +1055,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 					return false;
 				}
 			    video = videojs("vid1").player();
-			    user_email = $("#email").val();
+			    //user_email = $("#email").val();
+			    user_email = $rootScope.user.password.email;
 			    video_url = video.src();
 			    $scope.roiController.sendData(user_email, video_url, time);
 			},
