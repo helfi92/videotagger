@@ -16,7 +16,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	}());
 
 	var Auth = Auth;
-	$scope.urlLink = 'https://www.youtube.com/watch?v=UiyDmqO59QE';
+	$scope.urlLink = 'https://www.youtube.com/watch?v=iQ4LJSxf3JE&feature=youtu.be.'; //https://www.youtube.com/watch?v=UiyDmqO59QE;
 	$scope.tagTypes = [{
 		name : '',
 		cl : ''
@@ -251,9 +251,13 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			player.bigPlayButton.show();
 			
 			player.markers.removeAll();
-			
-			setTagTypes();
-			
+			player.play();
+			// timer to give player time to refresh its player duration
+			$timeout(function(){
+				setTagTypes();
+
+			},1000);
+				
 		});
 	};
 	
@@ -792,9 +796,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		}
 
 		ctx.globalCompositeOperation = "source-over";
-		if(colorIndex > 69){
-			alert('Application currently hold only 70 tag types. Please remove some tag types');
-		}
+		
 		ctx.fillStyle = colorClass[colorIndex].style.backgroundColor;
 		ctx.fillRect(x1,y, x2 - x1, 20);
 		ctx.fillStyle = "green";
@@ -895,6 +897,33 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	  	drawTagsOnCanvas(); 
 	}
 
+	function FormatTimeString(timeInSeconds)
+	{
+		var hours   = Math.floor(timeInSeconds / 3600);
+	    var minutes = Math.floor((timeInSeconds - (hours * 3600)) / 60);
+	    var seconds = timeInSeconds - (hours * 3600) - (minutes * 60);
+
+	    if (hours   < 10)
+	    {
+	    	hours   = "0"+hours;
+	    }
+
+	    if (minutes < 10)
+	    {
+	    	minutes = "0"+minutes;
+	    }
+	    
+
+	    if (seconds < 10) 
+	    {
+	    	seconds = "0"+seconds;
+	    }
+
+	    var time    = hours+':'+minutes+':'+seconds;
+
+	    return time;
+	}
+
 	function drawCanvasBackground(){
 		var canvas,
 			ctx; 
@@ -913,17 +942,10 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			selected : null
 		};
 
-
 	  	//Compute text dimensions
 	  	const xTextOffset = canvas.width * (1.0 - timelineObj.relativeTimelineSize);
 
-
 		//Timeline bars
-		
-	  	
-	  	
-	
-
 	  	if(timelinesArray[0][1].markersArray.length > 0){
 	  		canvas_height.selected = canvas_height.one;
 	  	}
@@ -944,6 +966,33 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	  	}
 
 	  	canvas.height = canvas_height.selected;
+
+	  	// Compute time coordinates
+	  	var time1 = Math.floor(timelineObj.videoLength * 0.25);
+	  	var time2 = Math.floor(timelineObj.videoLength * 0.5);
+	  	var time3 = Math.floor(timelineObj.videoLength * 0.75);
+
+	  	var time1XCoordinates = canvas.width * 0.25
+	  	var time2XCoordinates = canvas.width * 0.5
+	  	var time3XCoordinates = canvas.width * 0.75
+
+	  	var formattedTime1 = FormatTimeString(time1);
+	  	var formattedTime2 = FormatTimeString(time2);
+	  	var formattedTime3 = FormatTimeString(time3);
+
+	  	// Add time on top of multi-timeline view
+	  	const TimeHeight = 12
+	  	const timeXOffSet = 20;
+	  	ctx.font = "11px Arial";
+	  	ctx.fillText(formattedTime1, time1XCoordinates - timeXOffSet, TimeHeight);
+		ctx.fillText(formattedTime2, time2XCoordinates - timeXOffSet, TimeHeight);
+		ctx.fillText(formattedTime3, time3XCoordinates - timeXOffSet, TimeHeight);
+
+	  	// Draw time indicator
+	  	ctx.fillRect(time1XCoordinates - 2, TimeHeight + 2, 4, 6); 
+	  	ctx.fillRect(time2XCoordinates - 2, TimeHeight + 2, 4, 6); 
+	  	ctx.fillRect(time3XCoordinates - 2, TimeHeight + 2, 4, 6); 
+
 	  	ctx.fillStyle="#7d7a79";
 	  	ctx.globalCompositeOperation='destination-over';
 	  	if(timelinesArray[0][1].markersArray.length > 0){
@@ -964,9 +1013,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	  	if(timelinesArray[5][1].markersArray.length > 0){
 	  		ctx.fillRect(xTimelineOffset, 170, timelineObj.width, TIMELINE_HEIGHT);
 	  	}
-
-	  	
-
 	}
 
 	function drawTagsOnCanvas(){
