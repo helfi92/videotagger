@@ -1113,10 +1113,15 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			    if ($('#NW').is(":checked")){
 			   		hsv_directions += "NW ";
 			    }
+			    // default
+			    if (hsv_directions = "") {
+			   		hsv_directions += "N ";
+			    }
 					
 			    surf_option = $("#sel5 :selected").val();
 
 			    $scope.roiController.sendData(user_email, video_url, time, cv_type, sampling_rate, start_time, end_time, hsv_directions, surf_option);
+			    }
 			},
 
 			ROI : function(e) {
