@@ -1039,27 +1039,27 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			sampling_rate, 
 			start_time, 
 			end_time, 
-			hsv_direction, 
+			hsv_directions, 
 			surf_option;
 		
 
 		return {
 			//slider function for event
-			initSlider : function(){
-				var player = videojs('vid1'),
-				sliderEndInit,
-				sliderStartInit;
+			// initSlider : function(){
+			// 	var player = videojs('vid1'),
+			// 	sliderEndInit,
+			// 	sliderStartInit;
 
-				if (videoTimeInPercentage(player.currentTime()) + 30 < 100){
-					sliderEndInit = parseInt(videoTimeInPercentage(player.currentTime()) + 30, 10);
-				} else {
-					sliderEndInit = parseInt(100,10);
-				}
+			// 	if (videoTimeInPercentage(player.currentTime()) + 30 < 100){
+			// 		sliderEndInit = parseInt(videoTimeInPercentage(player.currentTime()) + 30, 10);
+			// 	} else {
+			// 		sliderEndInit = parseInt(100,10);
+			// 	}
 
-				sliderStartInit = videoTimeInPercentage(player.currentTime());
+			// 	sliderStartInit = videoTimeInPercentage(player.currentTime());
 
-				rangeSliderInit('vid1','slider2',sliderStartInit,sliderEndInit);
-			},
+			// 	rangeSliderInit('vid1','slider2',sliderStartInit,sliderEndInit);
+			// },
 
 			offset : function(type){
 			    var offset = $("#vid1").offset();
@@ -1087,10 +1087,36 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			    start_time = $("#sel3 :selected").text();
 			    end_time = $("#sel3 :selected").text();
 
-			    hsv_direction = $("#sel4 :selected").val();
+			    // checkbox string creation
+				hsv_directions = "";
+			    if ($('#N').is(":checked")){
+			   		hsv_directions += "N ";
+			    }
+			    if ($('#NE').is(":checked")){
+			   		hsv_directions += "NE ";
+			    }
+			    if ($('#E').is(":checked")){
+			   		hsv_directions += "E ";
+			    }
+			    if ($('#SE').is(":checked")){
+			   		hsv_directions += "SE ";
+			    }
+			    if ($('#S').is(":checked")){
+			   		hsv_directions += "S ";
+			    }
+			    if ($('#SW').is(":checked")){
+			   		hsv_directions += "SW ";
+			    }
+			    if ($('#W').is(":checked")){
+			   		hsv_directions += "W ";
+			    }
+			    if ($('#NW').is(":checked")){
+			   		hsv_directions += "NW ";
+			    }
+					
 			    surf_option = $("#sel5 :selected").val();
 
-			    $scope.roiController.sendData(user_email, video_url, time, cv_type, sampling_rate, start_time, end_time, hsv_direction, surf_option);
+			    $scope.roiController.sendData(user_email, video_url, time, cv_type, sampling_rate, start_time, end_time, hsv_directions, surf_option);
 			},
 
 			ROI : function(e) {
@@ -1182,7 +1208,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			    $("#bottomLeft").html("BL: " + iX + ", " + pY);
 			},
 
-			sendData : function(email, url, time, cv_type, sampling_rate, start_time, end_time, hsv_direction, surf_option){
+			sendData : function(email, url, time, cv_type, sampling_rate, start_time, end_time, hsv_directions, surf_option){
 			    var valTL = iX + ", " + iY;
 			    var valTR = pX + ", " + iY;
 			    var valBR = pX + ", " + pY;
@@ -1192,7 +1218,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 			    console.log("sending data!");
 
-			    data = '{"user_email":"' + email + '", "youtube_url":"' + url + '", "points":"' + points + '","time":"' + time + '","cv_type":"' + cv_type + '","sampling_rate":"' + sampling_rate + '","hsv_direction":"' + hsv_direction + '","surf_option":"' + surf_option + '"}';
+			    data = '{"user_email":"' + email + '", "youtube_url":"' + url + '", "points":"' + points + '","time":"' + time + '","cv_type":"' + cv_type + '","sampling_rate":"' + sampling_rate + '","hsv_directions":"' + hsv_directions + '","surf_option":"' + surf_option + '"}';
 			    console.log(data);
 			    $.ajax({
 			        url: 'http://ec2-54-200-65-191.us-west-2.compute.amazonaws.com/predict',
@@ -1216,4 +1242,3 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 
 }]);
-

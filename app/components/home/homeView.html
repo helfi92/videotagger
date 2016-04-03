@@ -91,26 +91,32 @@
           <input style="width:100%;" class="form-control" type="text" width="300px" name="end-time" id="end-time" value="0:00">
         </div>
 
-<!--         <div id="slider2"></div> -->
-
+<!--         <div id="slider2"></div>
+ -->
         <br>
-        <label for="sel4">Advanced HSV Options:</label>
-        <select class="form-control" id="sel4">
-          <option value="N">N</option>
-          <option value="NE">NE</option>
-          <option value="E">E</option>
-          <option value="SE">SE</option>
-          <option value="S">S</option>
-          <option value="SW">SW</option>
-          <option value="W">W</option>
-          <option value="NW">NW</option>
-        </select>
+        <label for="a_hsv">Advanced HSV Options</label>
+        <div id="a_hsv">
+          <label for="sel4">Direction(s) to tag:</label>
+          <div id="sel4">
+          <label class="checkbox-inline"><input type="checkbox" value="N" id="N">N</label>
+          <label class="checkbox-inline"><input type="checkbox" value="NE" id="NE">NE</label>
+          <label class="checkbox-inline"><input type="checkbox" value="E" id="E">E</label>
+          <label class="checkbox-inline"><input type="checkbox" value="SE" id="SE">SE</label>
+          <label class="checkbox-inline"><input type="checkbox" value="S" id="S">S</label>
+          <label class="checkbox-inline"><input type="checkbox" value="SW" id="SW">SW</label>
+          <label class="checkbox-inline"><input type="checkbox" value="W" id="W">W</label>
+          <label class="checkbox-inline"><input type="checkbox" value="NW" id="NW">NW</label>
+        </div>
+        </div>
         <br>
-        <label for="sel5">Advanced SURF Options:</label>
-        <select class="form-control" id="sel5">
-          <option value="in_scene">Tag when object is in the scene</option>
-          <option value="enter_exit_scene">Tag when object enters or leaves the scene</option>
+        <label for="a_surf">Advanced SURF Options</label>
+        <div id="a_surf">
+          <label for="sel5">Tag condition:</label>
+          <select class="form-control" id="sel5">
+          <option value="in_scene">Object in scene</option>
+          <option value="enter_exit_scene">Object enters or leaves scene</option>
         </select>
+        </div>
       </div>
 
       
