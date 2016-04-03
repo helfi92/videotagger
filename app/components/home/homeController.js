@@ -1078,7 +1078,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 					return false;
 				}
 			    video = videojs("vid1").player();
-			    //user_email = $("#email").val();
 			    user_email = $rootScope.user.password.email;
 			    video_url = video.src();
 			    
@@ -1095,6 +1094,9 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			},
 
 			ROI : function(e) {
+				if(!!!$scope.requireAuth()){
+					return false;
+				}
 			    video = videojs("vid1").player();
 			    $(".video-js").css("pointer-events", "none");
 			    $(document).bind("mousedown", $scope.roiController.startSelect);
