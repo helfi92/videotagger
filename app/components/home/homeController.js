@@ -1034,10 +1034,33 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			time,
 			video_url,
 			user_email,
-			data;
+			data,
+			cv_type, 
+			sampling_rate, 
+			start_time, 
+			end_time, 
+			hsv_direction, 
+			surf_option;
 		
 
 		return {
+			//slider function for event
+			initSlider : function(){
+				var player = videojs('vid1'),
+				sliderEndInit,
+				sliderStartInit;
+
+				if (videoTimeInPercentage(player.currentTime()) + 30 < 100){
+					sliderEndInit = parseInt(videoTimeInPercentage(player.currentTime()) + 30, 10);
+				} else {
+					sliderEndInit = parseInt(100,10);
+				}
+
+				sliderStartInit = videoTimeInPercentage(player.currentTime());
+
+				rangeSliderInit('vid1','slider2',sliderStartInit,sliderEndInit);
+			},
+
 			offset : function(type){
 			    var offset = $("#vid1").offset();
 
@@ -1058,7 +1081,17 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			    //user_email = $("#email").val();
 			    user_email = $rootScope.user.password.email;
 			    video_url = video.src();
-			    $scope.roiController.sendData(user_email, video_url, time);
+			    
+			    cv_type = $("#sel1 :selected").val();
+			    sampling_rate = $("#sel2 :selected").val();
+
+			    start_time = $("#sel3 :selected").text();
+			    end_time = $("#sel3 :selected").text();
+
+			    hsv_direction = $("#sel4 :selected").val();
+			    surf_option = $("#sel5 :selected").val();
+
+			    $scope.roiController.sendData(user_email, video_url, time, cv_type, sampling_rate, start_time, end_time, hsv_direction, surf_option);
 			},
 
 			ROI : function(e) {
@@ -1147,7 +1180,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			    $("#bottomLeft").html("BL: " + iX + ", " + pY);
 			},
 
-			sendData : function(email, url, time){
+			sendData : function(email, url, time, cv_type, sampling_rate, start_time, end_time, hsv_direction, surf_option){
 			    var valTL = iX + ", " + iY;
 			    var valTR = pX + ", " + iY;
 			    var valBR = pX + ", " + pY;
@@ -1157,7 +1190,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 			    console.log("sending data!");
 
-			    data = '{"user_email":"' + email + '", "youtube_url":"' + url + '", "points":"' + points + '","time":"' + time + '"}';
+			    data = '{"user_email":"' + email + '", "youtube_url":"' + url + '", "points":"' + points + '","time":"' + time + '","cv_type":"' + cv_type + '","sampling_rate":"' + sampling_rate + '","hsv_direction":"' + hsv_direction + '","surf_option":"' + surf_option + '"}';
 			    console.log(data);
 			    $.ajax({
 			        url: 'http://ec2-54-200-65-191.us-west-2.compute.amazonaws.com/predict',

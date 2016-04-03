@@ -2,8 +2,8 @@
 <!-- CONTENT -->
 <div style="" class="">
   <div style="padding-top:7%;width:640px;margin: 0 auto; padding-bottom:10%;z-index: 1;">
-  	<!-- SEARCH BAR -->
-  	   <div style="text-align:center;" class="input-group">
+    <!-- SEARCH BAR -->
+       <div style="text-align:center;" class="input-group">
         <input ng-model="urlLink" type="text" class="form-control" placeholder="Enter URL...">
         <span class="input-group-btn">
           <button ng-click="goButtonClicked(urlLink)" class="btn btn-default" type="button">Go!</button>
@@ -61,6 +61,55 @@
         <div class="col-md-4 text-center">
             <button style="width:100%;" class="btn btn-default" ng-click="roiController.submit()">Email Results</button>
         </div>
+      </div>
+
+      <!-- ADVANCED CONTROLS -->
+      <br>
+      <div style="text-align:center;">
+      <button class="btn btn-default text-center" type="button" data-toggle="collapse" data-target="#adv-controls" ng-click="roiController.initSlider()">Toggle Advanced Controls</button>
+      <br>
+      </div>
+      <div class="form-group collapse" id="adv-controls">
+        <br>
+        <label for="sel1">Detection type:</label>
+        <select class="form-control" id="sel1">
+          <option value="HSV">HSV Object Tracking</option>
+          <option value="SURF">SURF Object Recognition</option>
+        </select>
+        <br>
+        <label for="sel2">Sampling Rate:</label>
+        <select class="form-control" id="sel2">
+          <option value="1">Every frame</option>
+          <option value="3">Every 3 frames</option>
+          <option value="5">Every 5 frames</option>
+        </select>
+        <br>
+        <label for="sel3">Start and end times:</label>
+        <div id="sel3">
+          <input style="width:100%;" class="form-control" type="text" width="300px" name="start-time" id="start-time" value="0:00">
+          <input style="width:100%;" class="form-control" type="text" width="300px" name="end-time" id="end-time" value="0:00">
+        </div>
+
+<!--         <div id="slider2"></div> -->
+
+        <br>
+        <label for="sel4">Advanced HSV Options:</label>
+        <select class="form-control" id="sel4">
+          <option value="N">N</option>
+          <option value="NE">NE</option>
+          <option value="E">E</option>
+          <option value="SE">SE</option>
+          <option value="S">S</option>
+          <option value="SW">SW</option>
+          <option value="W">W</option>
+          <option value="NW">NW</option>
+        </select>
+        <br>
+        <label for="sel5">Advanced SURF Options:</label>
+        <select class="form-control" id="sel5">
+          <option value="in_scene">Tag when object is in the scene</option>
+          <option value="enter_exit_scene">Tag when object enters or leaves the scene</option>
+        </select>
       </div>
 
       
