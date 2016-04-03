@@ -1218,7 +1218,17 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 			    console.log("sending data!");
 
-			    data = '{"user_email":"' + email + '", "youtube_url":"' + url + '", "points":"' + points + '","time":"' + time + '","cv_type":"' + cv_type + '","sampling_rate":"' + sampling_rate + '","hsv_directions":"' + hsv_directions + '","surf_option":"' + surf_option + '"}';
+			    data = '{"user_email":"' + email 
+			    	+ '", "youtube_url":"' + url 
+			    	+ '", "points":"' + points 
+			    	+ '","time":"' + time 
+			    	+ '","start_time":"' + start_time 
+			    	+ '","end_time":"' + end_time 
+			    	+ '","cv_type":"' + cv_type 
+			    	+ '","sampling_rate":"' + sampling_rate 
+			    	+ '","hsv_directions":"' + hsv_directions 
+			    	+ '","surf_option":"' + surf_option 
+			    	+ '"}';
 			    console.log(data);
 			    $.ajax({
 			        url: 'http://ec2-54-200-65-191.us-west-2.compute.amazonaws.com/predict',
