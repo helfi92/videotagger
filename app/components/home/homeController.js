@@ -1087,36 +1087,16 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			    start_time = $("#sel3 :selected").text();
 			    end_time = $("#sel3 :selected").text();
 
-			    // checkbox string creation
-				hsv_directions = "";
-			    if ($('#N').is(":checked")){
-			   		hsv_directions += "N ";
-			    }
-			    if ($('#NE').is(":checked")){
-			   		hsv_directions += "NE ";
-			    }
-			    if ($('#E').is(":checked")){
-			   		hsv_directions += "E ";
-			    }
-			    if ($('#SE').is(":checked")){
-			   		hsv_directions += "SE ";
-			    }
-			    if ($('#S').is(":checked")){
-			   		hsv_directions += "S ";
-			    }
-			    if ($('#SW').is(":checked")){
-			   		hsv_directions += "SW ";
-			    }
-			    if ($('#W').is(":checked")){
-			   		hsv_directions += "W ";
-			    }
-			    if ($('#NW').is(":checked")){
-			   		hsv_directions += "NW ";
-			    }
-			    // default
-			    if (hsv_directions = "") {
-			   		hsv_directions += "N ";
-			    }
+				var dirs = [];
+	            $.each($("input[name='dir']:checked"), function(){            
+	                dirs.push($(this).val());
+	            });
+
+	            if (dirs.length != 0){
+	            	hsv_directions = dirs.join(", ");
+	            } else {
+	            	hsv_directions = "N";
+	            }
 					
 			    surf_option = $("#sel5 :selected").val();
 
