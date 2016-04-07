@@ -8,7 +8,8 @@ app.factory("Auth",['$firebaseAuth','$rootScope',function($firebaseAuth,$rootSco
 	       console.log('user is: ', authData);
 	    });
 
-        function errorModal(){
+        function errorModal(err){
+            document.getElementById("error_message_login").textContent = err;
             $('#errorModal').modal('show');
         }
 
@@ -20,25 +21,25 @@ app.factory("Auth",['$firebaseAuth','$rootScope',function($firebaseAuth,$rootSco
                     password : password
                 }).then(
                     function(authData){
-                        //$rootScope.isLoggedIn = true;
                         console.log(authData)
                         return authData;
                     }, 
                     function(errorData){
-                        errorModal();
+                        errorModal(errorData);
                     }
                 );
             },
             logout : function(){
                 authRef.$unauth().then(function(data){
                 }, function(errorData){
-                    errorModal();
+                    errorModal(errorData);
                 });
             },
             register: function(email,password) {
-	        	return authRef.$createUser({email: email, password: password}).then(function(data){
+	        	return authRef.$createUser({email: email, password: password})
+                .then(function(data){
                 },function(errorData){
-                    errorModal();                
+                    errorModal(errorData);                
                 });
 	    	},
         }
