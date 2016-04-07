@@ -11,7 +11,7 @@
       </div>
 
       <!-- VIDEO -->
-      <div style="padding-top:25px; padding-bottom: 25px;">
+      <div style="padding-top:25px; padding-bottom: 25px;position:relative;">
           <video
               style="margin: 0 auto 0 auto"
               ng-model="link"
@@ -24,6 +24,22 @@
               <source src="https://www.youtube.com/watch?v=iQ4LJSxf3JE&feature=youtu.be." type='video/youtube'
           />
           </video>
+          <div style="position:absolute;top:0;right:-250px;">
+            <div>
+              <h2>Legend</h2>
+            </div>
+            <div style="max-height:550px;overflow-y:auto;">
+              <!-- Lengend Content -->
+              <table id="table-tag-legend" class="table table-bordered table-striped table-background" style="width:100%;text-align: center;border: 1px solid black;">
+                <tbody>
+                  <tr>
+                    <td>Color</td>
+                    <td>Tag Type</td>
+                  </tr> 
+                </tbody>      
+              </table>
+            </div>
+          </div>
       </div>
       
       <div id="grid">
@@ -39,7 +55,10 @@
         <div style="padding-left:0.5em;" class="col-xs-6">
           <button ng-click="addTagOnClick();" style="width:100%;margin-bottom:25px;" class="btn red">Add a Tag</button>
         </div>
+
       </div>
+
+
       
 
       <div style="text-align:center;" id="timeline"></div>

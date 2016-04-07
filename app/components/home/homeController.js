@@ -34,6 +34,41 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		visibility : false,
 	};
 
+	/*
+		The numbers represent the classname without the "color" prefix.
+	*/
+	function setColorsOnLegend(){
+		var tr,
+			td_color,
+			td_name,
+			span,
+			color_num,
+			table;
+
+			table = document.querySelector("#table-tag-legend tbody");
+
+			
+		for(var i = 0 ; i < $scope.tagTypes.length; i++){
+			tr = document.createElement("tr");
+			td_color = document.createElement("td");
+			td_name = document.createElement("td");
+
+			//	Add color to td element
+			color_num = $scope.tagTypes[i].cl;
+			td_color.classList.add("color"+color_num);
+
+			//	Add name of tag
+			td_name.textContent = $scope.tagTypes[i].name;
+
+			//	Add to table
+			tr.appendChild(td_color);
+			tr.appendChild(td_name);
+			table.appendChild(tr);
+
+		}
+		
+	}
+
     	
     function getListOfRequests(callback){
 		$scope.requestsList = [];
@@ -142,53 +177,88 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	}
 	function addDefaultTags(){
 		$http.get("assets/json/defaultTags.json").then(function(data){
-			var type_nbr = data.data;
-			console.log('default tags: ', type_nbr);
-			for(var i = 0 in type_nbr){
-				$scope.tagTypes.push(type_nbr[i]);
+			$scope.default_TagTypes = data.data;
+			console.log('default tags: ', $scope.default_TagTypes);
+			for(var i = 0 in $scope.default_TagTypes){
+				$scope.tagTypes.push($scope.default_TagTypes[i]);
 			}
 		});
 	
 	}
 
-	function setTagTypes(){
-		
-		$timeout(function(){
-			$scope.tagTypes = [];
-			addDefaultTags();
-			videojs("vid1").ready(function(){
-				
-				refTag.on('value',function(snapshot){
-					var refChapterIndex = 0;
-					setCurrentVideoTagList(snapshot);
-					for( var i = 0 ; i < $scope.currentVideoTagList.length ; i++){
-						//do not add duplicate chapters
-					    var checkForDuplicate = function(object,str){
-							for(var j = 0 ; j < object.length ; j++){
-								if(object[j].name == str){
-									return false;
-								}
-							}
-							return true;
-						}
-						if(!$scope.tagTypes.length || checkForDuplicate($scope.tagTypes,$scope.currentVideoTagList[i].chapter)){
-					    	$scope.tagTypes.push({name : $scope.currentVideoTagList[i].chapter, cl : "" + refChapterIndex});
-					    	//$scope.tagTypes[refChapterIndex].cl = "" + refChapterIndex;
-					    	refChapterIndex++;
-					    }	 
-
-					}					
-					$http.post('/initAnnotation', {}).then(function(response){
-						console.log('post success:',response);
-						setMarkersForVideo();		
-					},function(err){
-						console.log('post error: ', err);
-					})
-
-				});
-			});			
-		});
+	//	Return cl class if tag type is present; False otherwise
+	function isDefaultTagType(tag){
+		for( var i = 0 ; i < $scope.default_TagTypes.length ; i++){
+			if($scope.default_TagTypes[i].name == tag.chapter){
+				return $scope.default_TagTypes[i].cl;
+			}
+		}
+		return false;
 	}
+
+	var setTagTypes = (function setTagTypes(){
+		//	static variables
+		var refChapterIndex;
+
+		refChapterIndex = 0;
+
+		//	closure
+		return function(){
+			var default_cl;
+			$timeout(function(){
+				$scope.tagTypes = [];
+				addDefaultTags();
+				videojs("vid1").ready(function(){
+					
+					refTag.on('value',function(snapshot){
+						setCurrentVideoTagList(snapshot);
+						for( var i = 0 ; i < $scope.currentVideoTagList.length ; i++){
+							
+							//	Do not add duplicate chapters
+						    var checkForDuplicate = function(object,str){
+								for(var j = 0 ; j < object.length ; j++){
+									if(object[j].name == str){
+										return false;
+									}
+								}
+								return true;
+							}
+							if(!$scope.tagTypes.length || checkForDuplicate($scope.tagTypes,$scope.currentVideoTagList[i].chapter)){
+						    	
+						    	if(default_cl = isDefaultTagType($scope.currentVideoTagList[i])){
+						    		$scope.tagTypes.push({
+						    			name : $scope.currentVideoTagList[i].chapter, 
+						    			cl : "" + default_cl
+						    		});
+						    	}else{
+							    	$scope.tagTypes.push({
+							    		name : $scope.currentVideoTagList[i].chapter, 
+							    		cl : "" + refChapterIndex
+							    	});
+
+							    	refChapterIndex++;	
+						    	}
+						    	
+						    	
+						    }	 
+
+						}
+						
+						setColorsOnLegend();
+						$http.post('/initAnnotation', {}).then(function(response){
+							console.log('post success:',response);
+							setMarkersForVideo();		
+						},function(err){
+							console.log('post error: ', err);
+						})
+
+					});
+				});			
+			});
+		}
+		
+		
+	}());
 
 	function setCurrentVideoTagList(object){
 		$scope.currentVideoTagList = [];
@@ -255,7 +325,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			// timer to give player time to refresh its player duration
 			$timeout(function(){
 				setTagTypes();
-
 			},1000);
 				
 		});
@@ -326,6 +395,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 				$scope.tag.$add(dataObj);
 
 				addMarkerToTimeline(dataObj);
+				setTagTypes();
 			}else{
 				alert('The added tag seems to be already existant');
 			}
@@ -1253,6 +1323,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	}());
 	
 	console.log('roiController: ', $scope.roiController);
+
 
 
 }]);
