@@ -1311,6 +1311,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			        dataType: 'json',
 			        contentType: "application/json",
 			        success: function (data) {
+			            //displayAlert("Request Submitted");
 			            console.log(data);
 			        },
 			        headers: {'Content-Type':'application/json'},

@@ -57,17 +57,22 @@
 }
 
 .alert-video{
-  position: absolute;
+  position: fixed;
   opacity: 0;
-  top: 40px;
-  right: 0;
+  top: 60px;
+  left: 0;
   padding: 1em;
   transition: opacity 1s linear;
-  background-color: rgba(50, 255, 50, 0.7);
-  border: 1px solid #00ff00;
-  color: #EEE;
+  color: #31708f;
+  background-color: #d9edf7;
+  border-color: #bcdff1;
   width:200px;
   text-align: center;
+  padding: 15px;
+  margin-left:1em;
+  margin-top:1em;
+  border: 0.4px solid;
+  border-radius: .25rem;
 }
 .alert-video.active{
   opacity:0.9;
