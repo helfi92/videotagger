@@ -24,7 +24,14 @@
               <source src="https://www.youtube.com/watch?v=iQ4LJSxf3JE&feature=youtu.be." type='video/youtube'
           />
           </video>
-          <div style="position:absolute;top:0;right:-250px;">
+
+          <!-- Confirmation tag creation -->
+          <div id="alert-video" class="alert-video">
+            ROI Selected
+          </div>
+
+          <!-- Legend -->
+          <div class="disable-select" style="position:absolute;top:0;right:-250px;">
             <div>
               <h2>Legend</h2>
             </div>
@@ -86,7 +93,7 @@
       <!-- ADVANCED CONTROLS -->
       <br>
       <div style="text-align:center;">
-      <button class="btn btn-default text-center" type="button" data-toggle="collapse" data-target="#adv-controls" ng-click="roiController.initSlider()">Toggle Advanced Controls</button>
+      <button class="btn btn-default text-center" type="button" data-toggle="collapse" data-target="#adv-controls">Toggle Advanced Controls</button>
       <br>
       </div>
       <div class="form-group collapse" id="adv-controls">
@@ -107,11 +114,8 @@
         <label for="sel3">Start and end times:</label>
         <div id="sel3">
           <input style="width:100%;" class="form-control" type="text" width="300px" name="start-time" id="start-time" value="0:00">
-          <input style="width:100%;" class="form-control" type="text" width="300px" name="end-time" id="end-time" value="0:00">
+          <input style="width:100%;" class="form-control" type="text" width="300px" name="end-time" id="end-time">
         </div>
-
-<!--         <div id="slider2"></div>
- -->
         <br>
         <label for="a_hsv">Advanced HSV Options</label>
         <div id="a_hsv">

@@ -300,6 +300,21 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	    }			    		
 	}	
 
+	function displayAlert(text){
+		
+		var elem;
+
+		elem = document.getElementById("alert-video");
+
+		elem.classList.add("active");
+		elem.textContent = text;
+
+		setTimeout(function(){
+			elem.classList.remove("active");
+		},2000)
+	}
+
+
 	function validateUrl(url){
 		if(url.indexOf("youtube") > -1){
 			return "youtube";
@@ -325,6 +340,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			// timer to give player time to refresh its player duration
 			$timeout(function(){
 				setTagTypes();
+				setEndTime();
 			},1000);
 				
 		});
@@ -396,6 +412,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 				addMarkerToTimeline(dataObj);
 				setTagTypes();
+				displayAlert("Tag Created");
 			}else{
 				alert('The added tag seems to be already existant');
 			}
@@ -579,11 +596,30 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		});
 		//player.markers.removeAll();	
 		setTagTypes();
+		setEndTime();
 
 	}
 
 	$timeout(init);
 	
+	
+	function setEndTime(){
+		var player,
+			duration,
+			elem;
+		
+		
+		videojs("vid1").ready(function(){
+			player = videojs("vid1");
+			duration = $scope.millisecondsToFormattedTime(player.player().duration());
+			elem = document.querySelector("#end-time");
+			elem.value = duration;
+		});	
+		
+
+
+	}
+
 	var refChapterIndex = 0;
 	
 	function rangeSliderInit(playerId,sliderId,start_nbr,end_nbr){
@@ -1114,23 +1150,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		
 
 		return {
-			//slider function for event
-			// initSlider : function(){
-			// 	var player = videojs('vid1'),
-			// 	sliderEndInit,
-			// 	sliderStartInit;
-
-			// 	if (videoTimeInPercentage(player.currentTime()) + 30 < 100){
-			// 		sliderEndInit = parseInt(videoTimeInPercentage(player.currentTime()) + 30, 10);
-			// 	} else {
-			// 		sliderEndInit = parseInt(100,10);
-			// 	}
-
-			// 	sliderStartInit = videoTimeInPercentage(player.currentTime());
-
-			// 	rangeSliderInit('vid1','slider2',sliderStartInit,sliderEndInit);
-			// },
-
 			offset : function(type){
 			    var offset = $("#vid1").offset();
 
@@ -1222,6 +1241,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			    if(playing){
 			        video.play();
 			    }
+			    displayAlert("ROI Selected");
 			},
 
 			openSelector : function(e) {
