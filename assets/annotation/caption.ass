@@ -16,6 +16,12 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
 Style: Default,Arial,25,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,2,1,2,10,10,10,1
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+<<<<<<< HEAD
 Dialogue: 0,00:00.00,00:20.00,Default,,0000,0000,0000,,
 Dialogue: 0,01:01.00,01:15.00,Default,,0000,0000,0000,,
 Dialogue: 0,02:56.00,03:21.00,Default,,0000,0000,0000,,
+=======
+Dialogue: 0,00:00.00Dialogue: 0,Dialogue: 0,01:01.00,02:56.0000:20.00,,,Default,,0000,0000,0000,,01:15.0003:21.00,Default,,0000,0000,0000,,,Default,,0000,0000,0000,,
+
+
+>>>>>>> origin/master
