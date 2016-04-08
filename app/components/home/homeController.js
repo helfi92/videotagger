@@ -1140,13 +1140,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			time,
 			video_url,
 			user_email,
-			data,
-			cv_type, 
-			sampling_rate, 
-			start_time, 
-			end_time, 
-			hsv_directions, 
-			surf_option;
+			data;
 		
 
 		return {
@@ -1163,6 +1157,15 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			},
 
 			submit : function(){
+			var cv_type, 
+				sampling_rate, 
+				start_time, 
+				end_time,
+				start_time_s,
+				end_time_s, 
+				hsv_directions, 
+				surf_option;
+
 			    if(!!!$scope.requireAuth()){
 					return false;
 				}
@@ -1173,8 +1176,13 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			    cv_type = $("#sel1 :selected").val();
 			    sampling_rate = $("#sel2 :selected").val();
 
-			    start_time = $("#sel3 :selected").text();
-			    end_time = $("#sel3 :selected").text();
+			    start_time = $("#start-time").val().split(':');
+			    end_time = $("#end-time").val().split(':');
+
+			    start_time_s = (+start_time[0]) * 60 + (+start_time[1]);
+			    end_time_s = (+end_time[0]) * 60 + (+end_time[1]);
+
+
 
 				var dirs = [];
 	            $.each($("input[name='dir']:checked"), function(){            
@@ -1189,7 +1197,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 					
 			    surf_option = $("#sel5 :selected").val();
 
-			    $scope.roiController.sendData(user_email, video_url, time, cv_type, sampling_rate, start_time, end_time, hsv_directions, surf_option);
+			    $scope.roiController.sendData(user_email, video_url, time, cv_type, sampling_rate, start_time_s, end_time_s, hsv_directions, surf_option);
 			},
 
 			ROI : function(e) {
