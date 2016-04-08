@@ -1183,7 +1183,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			    end_time_s = (+end_time[0]) * 60 + (+end_time[1]);
 
 
-
 				var dirs = [];
 	            $.each($("input[name='dir']:checked"), function(){            
 	                dirs.push($(this).val());
@@ -1298,6 +1297,24 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			    var points = [iX, iY, pX, iY, pX, pY, iX, pY];
 			    points = points.toString();
 
+			    var player = videojs("vid1");
+			    var duration_s = player.duration();
+
+				if(end_time > duration_s + 1 || start_time < 0){ // +1 because rounding
+					displayAlert("Error: Invalid start/end times.");
+					return;
+				}
+
+				if(valBR == ", "){
+					displayAlert("Error: No ROI selected.");
+					return;
+				}
+
+				if(!time){
+					displayAlert("Error: Invalid time in video.");
+					return;
+				}
+
 			    console.log("sending data!");
 
 			    data = '{"user_email":"' + email 
@@ -1319,7 +1336,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			        dataType: 'json',
 			        contentType: "application/json",
 			        success: function (data) {
-			            //displayAlert("Request Submitted");
+			            displayAlert("Request Submitted");
 			            console.log(data);
 			        },
 			        headers: {'Content-Type':'application/json'},
