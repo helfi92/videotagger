@@ -1300,13 +1300,14 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			    var player = videojs("vid1");
 			    var duration_s = player.duration();
 
-				if(end_time >= duration_s || start_time < 0){
-					displayAlert("Error: Invalid start/end times.");
+			    console.log(valBR);
+				if(!iX || !pX || !iY || !pY){
+					displayAlert("Error: No ROI selected.");
 					return;
 				}
 
-				if(valBR == ", "){
-					displayAlert("Error: No ROI selected.");
+				if(end_time > duration_s || start_time < 0){
+					displayAlert("Error: Invalid start/end times.");
 					return;
 				}
 
@@ -1324,6 +1325,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			    	+ '","surf_option":"' + surf_option 
 			    	+ '"}';
 			    console.log(data);
+			   	displayAlert("Request Submitted");
+
 			    $.ajax({
 			        url: 'http://ec2-54-200-65-191.us-west-2.compute.amazonaws.com/predict',
 			        type: 'POST',
@@ -1331,7 +1334,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			        dataType: 'json',
 			        contentType: "application/json",
 			        success: function (data) {
-			            displayAlert("Request Submitted");
 			            console.log(data);
 			        },
 			        headers: {'Content-Type':'application/json'},
