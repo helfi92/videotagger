@@ -1210,6 +1210,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			    if(playing){
 			        video.pause();
 			    }
+			    displayAlert("Please select ROI now");
 			},
 
 			startSelect : function(e) {
@@ -1247,7 +1248,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			        video.play();
 			    }
 			    if(iX < 0 || iY < 0 || pX > 640 || pY > 360){
-					displayAlert("Error: ROI not within video.");
+					displayAlert("Error: ROI not within video");
 				} else {
 			    	displayAlert("ROI Selected");
 				}
@@ -1295,12 +1296,12 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 			    console.log(valBR);
 				if(!iX || !pX || !iY || !pY){
-					displayAlert("Error: No ROI selected.");
+					displayAlert("Error: No ROI selected");
 					return;
 				}
 
 				if(end_time > duration_s || start_time < 0){
-					displayAlert("Error: Invalid start/end times.");
+					displayAlert("Error: Invalid start/end times");
 					return;
 				}
 
