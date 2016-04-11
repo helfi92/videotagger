@@ -1230,8 +1230,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			    iY = initialY - $scope.roiController.offset("top");
 			    pX = iX;
 			    pY = iY;
-
-			    $scope.roiController.printData();
 			},
 
 			endSelect : function(e) {
@@ -1248,7 +1246,11 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			    if(playing){
 			        video.play();
 			    }
-			    displayAlert("ROI Selected");
+			    if(iX < 0 || iY < 0 || pX > 640 || pY > 360){
+					displayAlert("Error: ROI not within video.");
+				} else {
+			    	displayAlert("ROI Selected");
+				}
 			},
 
 			openSelector : function(e) {
@@ -1278,15 +1280,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			    pY = e.pageY - $scope.roiController.offset("top");
 			    iX = initialX - $scope.roiController.offset("left");
 			    iY = initialY - $scope.roiController.offset("top");
-
-			    $scope.roiController.printData();
-			},
-
-			printData : function(){
-			    $("#topLeft").html("TL: " + iX + ", " + iY);
-			    $("#topRight").html("TR: " + pX + ", " + iY);
-			    $("#bottomRight").html("BR: " + pX + ", " + pY);
-			    $("#bottomLeft").html("BL: " + iX + ", " + pY);
 			},
 
 			sendData : function(email, url, time, cv_type, sampling_rate, start_time, end_time, hsv_directions, surf_option){
