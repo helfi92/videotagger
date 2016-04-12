@@ -28,7 +28,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	$scope.myRequests = [];
 	$scope.tagType = {};
   	$scope.tagTypes = [];
-
+  	$scope.unique_tagtypes_with_colors = [];
   	$scope.tagsTable = {
 		text : "Show Table",
 		visibility : false,
@@ -39,31 +39,87 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	*/
 	function setColorsOnLegend(){
 		var tr,
+			tr_head,
+			td_head1,
+			td_head2,
 			td_color,
 			td_name,
 			span,
 			color_num,
-			table;
+			table,
+			flag,
+			table_elem;
 
-			table = document.querySelector("#table-tag-legend tbody");
+			table = document.querySelector("#table-tag-legend");
+			$scope.unique_tagtypes_with_colors = [];
 
+		//	Filter list with current unique tag types and colors
+		for( var i = 0 ; i < $scope.tagTypes.length ; i++){
+			flag = false;
+			for( var j = 0 ; j < $scope.currentVideoTagList.length; j++){
+				flag = false;
+				if($scope.tagTypes[i].name == $scope.currentVideoTagList[j].chapter){
+					for( var z = 0 ; z < $scope.unique_tagtypes_with_colors.length ; z++){
+						if($scope.unique_tagtypes_with_colors[z].name == $scope.tagTypes[i].name){
+							flag = true;
+						}
+					}
+					if(flag == false){
+						$scope.unique_tagtypes_with_colors.push($scope.tagTypes[i]);
+					}
+					
+				}
+				
+			}	
+		}
 			
-		for(var i = 0 ; i < $scope.tagTypes.length; i++){
+		//	Empty table before populating it
+		while (table.firstChild) {
+    		table.removeChild(table.firstChild);
+		}
+
+		table_elem = document.createElement("table");
+		table_elem.className += "table table-bordered table-striped table-background";
+		table_elem.style.width = "100%";
+		table_elem.style.textAlign = "center";
+		table_elem.style.border = "1px solid black";
+
+		
+		tr_head = document.createElement("tr");
+		td_head1 = document.createElement("td");
+		td_head2 = document.createElement("td");
+
+		td_head1.textContent = 'Color';
+		td_head2.textContent = 'Tag Type';
+		td_head1.classList.add("legend-td");
+		td_head2.classList.add("legend-td");
+		tr_head.appendChild(td_head1);
+		tr_head.appendChild(td_head2);
+		table_elem.appendChild(tr_head);
+
+
+		for(var i = 0 ; i < $scope.unique_tagtypes_with_colors.length; i++){
+					
 			tr = document.createElement("tr");
 			td_color = document.createElement("td");
 			td_name = document.createElement("td");
 
+			td_color.classList.add("legend-td");
+			td_name.classList.add("legend-td");
+
 			//	Add color to td element
-			color_num = $scope.tagTypes[i].cl;
+			color_num = $scope.unique_tagtypes_with_colors[i].cl;
 			td_color.classList.add("color"+color_num);
 
 			//	Add name of tag
-			td_name.textContent = $scope.tagTypes[i].name;
+			td_name.textContent = $scope.unique_tagtypes_with_colors[i].name;
 
-			//	Add to table
 			tr.appendChild(td_color);
 			tr.appendChild(td_name);
-			table.appendChild(tr);
+			
+			table_elem.appendChild(tr);
+			table.appendChild(table_elem);
+
 
 		}
 		
@@ -230,6 +286,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 						    			name : $scope.currentVideoTagList[i].chapter, 
 						    			cl : "" + default_cl
 						    		});
+
 						    	}else{
 							    	$scope.tagTypes.push({
 							    		name : $scope.currentVideoTagList[i].chapter, 
@@ -1005,7 +1062,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		//	Reset hash table
 		markerMap = {};
 		populateMarkersArray();
-		
+
 		if(!document.getElementById('myCanvas')){
 			canvas = document.createElement("canvas");
 		}else{

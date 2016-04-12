@@ -85,3 +85,7 @@
   -webkit-user-select: none;
   -o-user-select: none;
 }
+.legend-td{
+      padding: 8px;
+      line-height: 1.42857143;
+}
