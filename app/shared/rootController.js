@@ -14,7 +14,7 @@ app.controller('rootController',['$scope','$rootScope','Auth','$firebaseArray','
   	// this method will open the registration modal if user is not authenticated
   	$scope.requireAuth = function(){
   		if(!!!$rootScope.user){
-  			$('#signupModal').modal('show');
+  			$('#loginModal').modal('show');
   			return false;
   		}
   		return true;

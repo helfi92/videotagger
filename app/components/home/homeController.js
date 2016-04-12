@@ -339,6 +339,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			player.play();
 			// timer to give player time to refresh its player duration
 			$timeout(function(){
+				initTimeline();
 				setTagTypes();
 				setEndTime();
 			},1000);
@@ -597,17 +598,51 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 		//player.markers.removeAll();	
 		setTagTypes();
 		setEndTime();
+		setUrlOnEnter();
 
 	}
 
 	$timeout(init);
 	
+	function setUrlOnEnter(callback){
+		var input_url;
+
+		input_url = document.getElementById('url-input');
+		input_url.addEventListener("keyup", function(e){
+			e.which = e.which || e.keyCode;
+			//	Enter
+			if(e.which == 13){
+				$scope.goButtonClicked($scope.urlLink);
+			}
+		});
+	}
+
+	/*
+
+	@params elem The HTML element to attach the  keyup event to
+	@params	callback The function to call when event fires
+	@params [Optional] A list of paramters seperated by commas to give to feed the callback
+
+	*/
+	$scope.enterHandle = function(elem,callback){
+		var args = arguments;;
+		var params = [];
+
+		elem.addEventListener("keyup", function(e){
+			e.which = e.which || e.keyCode;
+			//	Enter
+			if(e.which == 13){
+				args = Array.prototype.slice.call(args).slice(2);
+				callback.apply(null, args);
+			}
+		})
+	}
 	
 	function setEndTime(){
 		var player,
 			duration,
 			elem;
-		
+
 		
 		videojs("vid1").ready(function(){
 			player = videojs("vid1");
@@ -967,6 +1002,10 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	const xTimelineOffset = 0;
 	function initTimeline(){
 		var canvas;
+		//	Reset hash table
+		markerMap = {};
+		populateMarkersArray();
+		
 		if(!document.getElementById('myCanvas')){
 			canvas = document.createElement("canvas");
 		}else{
@@ -1077,14 +1116,21 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	  	var time1 = Math.floor(timelineObj.videoLength * 0.25);
 	  	var time2 = Math.floor(timelineObj.videoLength * 0.5);
 	  	var time3 = Math.floor(timelineObj.videoLength * 0.75);
+        var time4 = 0;
+        var time5 = timelineObj.videoLength;
 
-	  	var time1XCoordinates = canvas.width * 0.25
-	  	var time2XCoordinates = canvas.width * 0.5
-	  	var time3XCoordinates = canvas.width * 0.75
+	  	var time1XCoordinates = canvas.width * 0.25;
+	  	var time2XCoordinates = canvas.width * 0.5;
+	  	var time3XCoordinates = canvas.width * 0.75;
+	  	var time4XCoordinates = 0;
+        var time5XCoordinates = canvas.width;
+
 
 	  	var formattedTime1 = FormatTimeString(time1);
 	  	var formattedTime2 = FormatTimeString(time2);
 	  	var formattedTime3 = FormatTimeString(time3);
+	  	var formattedTime4 = FormatTimeString(time4);
+        var formattedTime5 = FormatTimeString(time5);
 
 	  	// Add time on top of multi-timeline view
 	  	const TimeHeight = 12
@@ -1093,11 +1139,15 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 	  	ctx.fillText(formattedTime1, time1XCoordinates - timeXOffSet, TimeHeight);
 		ctx.fillText(formattedTime2, time2XCoordinates - timeXOffSet, TimeHeight);
 		ctx.fillText(formattedTime3, time3XCoordinates - timeXOffSet, TimeHeight);
+		ctx.fillText(formattedTime4, time4XCoordinates, TimeHeight);
+        ctx.fillText(formattedTime5, time5XCoordinates - 45, TimeHeight);
 
 	  	// Draw time indicator
 	  	ctx.fillRect(time1XCoordinates - 2, TimeHeight + 2, 4, 6); 
 	  	ctx.fillRect(time2XCoordinates - 2, TimeHeight + 2, 4, 6); 
-	  	ctx.fillRect(time3XCoordinates - 2, TimeHeight + 2, 4, 6); 
+	  	ctx.fillRect(time3XCoordinates - 2, TimeHeight + 2, 4, 6);
+		ctx.fillRect(time4XCoordinates, TimeHeight + 2, 4, 6);
+		ctx.fillRect(time5XCoordinates - 4, TimeHeight + 2, 4, 6); 
 
 	  	ctx.fillStyle="#7d7a79";
 	  	ctx.globalCompositeOperation='destination-over';
