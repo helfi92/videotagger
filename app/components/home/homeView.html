@@ -151,7 +151,7 @@
           </div> 
           <div class="col-xs-10">
             <select class="form-control" ng-model="filterChapter">
-              <option ng-repeat="item in tagTypes track by $index" value="{{item.name}}">{{item.name}}</option>
+              <option ng-repeat="item in unique_tagtypes_with_colors track by $index" value="{{item.name}}">{{item.name}}</option>
             </select>
           </div> 
         </div> 
