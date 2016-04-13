@@ -28,7 +28,6 @@
           </video>
 
           
-
           <!-- Legend -->
           <div class="disable-select" style="position:absolute;top:0;right:-250px;">
             <div>
@@ -54,16 +53,9 @@
         <div style="padding-left:0.5em;" class="col-xs-6">
           <button ng-click="addTagOnClick();" style="width:100%;margin-bottom:25px;" class="btn red">Add a Tag</button>
         </div>
-
       </div>
 
-
-      
-
       <div style="text-align:center;" id="timeline"></div>
-
-      <br>
-      
       
       <!-- CONTROLS-->
       <div style="margin-top:1em;" class="row">     
@@ -72,9 +64,7 @@
         </div>
 
         <div class="col-md-4 text-center">
-          <button class="btn btn-default" style="width:100%;" type="button" ng-click="roiController.ROI()">
-            Select ROI
-          </button>
+          <button class="btn btn-default" style="width:100%;" type="button" ng-click="roiController.ROI()">Select ROI</button>
         </div>
 
         <div class="col-md-4 text-center">
@@ -83,15 +73,10 @@
       </div>
 
       <!-- ADVANCED CONTROLS -->
-      <br>
-      <div style="text-align:center">
-       <button class="btn btn-default" style="width:100%;" type="button" ng-click="roiController.submit()">Email Results</button>
-      <br>
-      </div>
       <div class="form-group collapse" id="adv-controls">
         <br>
         <label for="sel1">Detection type:</label>
-        <select class="form-control" id="sel1">
+        <select class="form-control" id="sel1" onchange="changeType()">
           <option value="HSV">HSV Object Tracking</option>
           <option value="SURF">SURF Object Recognition</option>
         </select>
@@ -108,30 +93,39 @@
           <input style="width:100%;" class="form-control" type="text" width="300px" name="start-time" id="start-time" value="0:00">
           <input style="width:100%;" class="form-control" type="text" width="300px" name="end-time" id="end-time">
         </div>
+        <div id="hsvOptions">
         <br>
-        <label for="a_hsv">Advanced HSV Options</label>
-        <div id="a_hsv">
-          <label for="sel4">Direction(s) to tag (Default North):</label>
-          <div id="sel4">
-          <label class="checkbox-inline"><input type="checkbox" value="N" id="N" name="dir">N</label>
-          <label class="checkbox-inline"><input type="checkbox" value="NE" id="NE" name="dir">NE</label>
-          <label class="checkbox-inline"><input type="checkbox" value="E" id="E" name="dir">E</label>
-          <label class="checkbox-inline"><input type="checkbox" value="SE" id="SE" name="dir">SE</label>
-          <label class="checkbox-inline"><input type="checkbox" value="S" id="S" name="dir">S</label>
-          <label class="checkbox-inline"><input type="checkbox" value="SW" id="SW" name="dir">SW</label>
-          <label class="checkbox-inline"><input type="checkbox" value="W" id="W" name="dir">W</label>
-          <label class="checkbox-inline"><input type="checkbox" value="NW" id="NW" name="dir">NW</label>
+          <label for="a_hsv">Advanced HSV Options</label>
+          <div id="a_hsv">
+            <label for="sel4">Direction(s) to tag (Default North):</label>
+            <div id="sel4">
+              <label class="checkbox-inline"><input type="checkbox" value="N" id="N" name="dir" checked>N</label>
+              <label class="checkbox-inline"><input type="checkbox" value="NE" id="NE" name="dir">NE</label>
+              <label class="checkbox-inline"><input type="checkbox" value="E" id="E" name="dir">E</label>
+              <label class="checkbox-inline"><input type="checkbox" value="SE" id="SE" name="dir">SE</label>
+              <label class="checkbox-inline"><input type="checkbox" value="S" id="S" name="dir">S</label>
+              <label class="checkbox-inline"><input type="checkbox" value="SW" id="SW" name="dir">SW</label>
+              <label class="checkbox-inline"><input type="checkbox" value="W" id="W" name="dir">W</label>
+              <label class="checkbox-inline"><input type="checkbox" value="NW" id="NW" name="dir">NW</label>
+            </div>
+          </div>
         </div>
-        </div>
+        <div id="surfOptions" style="display:none;">
         <br>
-        <label for="a_surf">Advanced SURF Options</label>
-        <div id="a_surf">
-          <label for="sel5">Tag condition:</label>
-          <select class="form-control" id="sel5">
-          <option value="in_scene">Object in scene</option>
-          <option value="enter_exit_scene">Object enters or leaves scene</option>
-        </select>
+          <label for="a_surf">Advanced SURF Options</label>
+          <div id="a_surf">
+            <label for="sel5">Tag condition:</label>
+            <select class="form-control" id="sel5">
+            <option value="in_scene">Object in scene</option>
+            <option value="enter_exit_scene">Object enters or leaves scene</option>
+          </select>
+          </div>
         </div>
+      </div>
+      <br>
+      <div style="text-align:center">
+       <button class="btn btn-default" style="width:100%;" type="button" ng-click="roiController.submit()">Process Request</button>
+      <br>
       </div>
 
       

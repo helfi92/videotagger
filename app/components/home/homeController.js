@@ -1344,6 +1344,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			    video = videojs("vid1").player();
 			    $(document).unbind("mousemove", $scope.roiController.openSelector);
 			    $(document).unbind("mouseup", $scope.roiController.endSelect);
+			    
 			    $(".ghost-select").removeClass("ghost-active");
 			    $(".ghost-select").width(0).height(0);
 			    $(".video-js").css("pointer-events", "auto");
@@ -1451,3 +1452,19 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 
 
 }]);
+
+
+function changeType() {
+	if($("#sel1 :selected").val() == "HSV"){
+		$('#surfOptions').hide();
+		$('#hsvOptions').show();
+	} else {
+		$('#hsvOptions').hide();
+		$('#surfOptions').show();
+	}
+}
+
+
+
+
+
