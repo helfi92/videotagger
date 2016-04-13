@@ -1344,7 +1344,7 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			    video = videojs("vid1").player();
 			    $(document).unbind("mousemove", $scope.roiController.openSelector);
 			    $(document).unbind("mouseup", $scope.roiController.endSelect);
-			    
+
 			    $(".ghost-select").removeClass("ghost-active");
 			    $(".ghost-select").width(0).height(0);
 			    $(".video-js").css("pointer-events", "auto");
@@ -1357,6 +1357,8 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			    }
 			    if(iX < 0 || iY < 0 || pX > 640 || pY > 360){
 					displayAlert("Error: ROI not within video");
+				} else if (iX > pX || iY > pY){
+					displayAlert("Error: Please select ROI from top left to bottom right");
 				} else {
 			    	displayAlert("ROI Selected");
 				}
@@ -1402,7 +1404,6 @@ app.controller('homeController',['$scope','$rootScope','Auth','$firebaseArray','
 			    var player = videojs("vid1");
 			    var duration_s = player.duration();
 
-			    console.log(valBR);
 				if(!iX || !pX || !iY || !pY){
 					displayAlert("Error: No ROI selected");
 					return;
